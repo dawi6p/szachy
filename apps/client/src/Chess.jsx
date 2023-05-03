@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import WithMoveValidation from "./integrations/WithMoveValidation";
 
-class App extends Component {
+class Chess extends Component {
   render() {
     return (
       <div>
@@ -14,7 +14,7 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Chess;
 
 const boardsContainer = {
   display: "flex",

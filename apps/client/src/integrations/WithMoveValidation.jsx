@@ -178,7 +178,7 @@ export default function WithMoveValidation() {
             }}
             squareStyles={squareStyles}
             dropSquareStyle={dropSquareStyle}
-            onDragOverSquare={onDragOverSquare}
+            //onDragOverSquare={onDragOverSquare}
             onSquareClick={onSquareClick}
             onSquareRightClick={onSquareRightClick}
           />

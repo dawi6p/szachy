@@ -4,12 +4,12 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function Home() {
-  const [hallo, setHallo] = useState('');
+  const [token, setToken] = useState('');
 
   useEffect(() =>{
     fetch('/api')
     .then((res)=>res.text())
-    .then(setHallo);
+    .then(setToken);
   }, []);
 
   return (
@@ -29,7 +29,7 @@ function Home() {
           </label>
           <input type="submit" />
       </form>
-      <h1>{hallo}</h1>
+      <h1>{token}</h1>
     </>
   )
 }

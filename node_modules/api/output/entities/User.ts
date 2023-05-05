@@ -1,13 +1,10 @@
 import {Column,Entity,Index,OneToMany,OneToOne,PrimaryGeneratedColumn} from "typeorm";
-import {Adminpower} from './Adminpower'
 import {Friends} from './Friends'
 import {Match} from './Match'
 import {Riddleuser} from './Riddleuser'
 import {Score} from './Score'
 
 
-@Index("AdminPowerID_2",["adminPowerId",],{ unique:true })
-@Index("AdminPowerID",["adminPowerId",],{  })
 @Entity("user" ,{schema:"szachy" } )
 export  class User {
 
@@ -32,13 +29,8 @@ bannedUntil:Date | null;
 @Column("datetime",{ name:"Deleted",nullable:true })
 deleted:Date | null;
 
-@Column("int",{ name:"AdminPowerID",unique:true })
+@Column("int",{ name:"AdminPowerID"})
 adminPowerId:number;
-
-@OneToOne(()=>Adminpower,adminpower=>adminpower)
-
-
-adminpower:Adminpower;
 
 @OneToMany(()=>Friends,friends=>friends.friend)
 

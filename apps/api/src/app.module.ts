@@ -6,7 +6,6 @@ import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Adminpower } from 'output/entities/Adminpower';
 import { Friends } from 'output/entities/Friends';
 import { Match } from 'output/entities/Match';
 import { Matchtype } from 'output/entities/Matchtype';
@@ -25,7 +24,7 @@ import { User } from 'output/entities/User';
       username: 'root',
       password: '',
       database: 'szachy',
-      entities: [Adminpower, Friends, Match, Matchtype, Riddle, Riddlemove, Riddleuser, Score, User],
+      entities: [Friends, Match, Matchtype, Riddle, Riddlemove, Riddleuser, Score, User],
       synchronize: true,
       extra: {
         trustServerCertificate: true,

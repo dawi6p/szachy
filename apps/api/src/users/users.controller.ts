@@ -1,6 +1,10 @@
-import { Body, Controller, Post, Get, Res, HttpException, Query, Req } from '@nestjs/common';
+import { Body, Controller, Post, Get, Res, HttpException, Query, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from 'output/entities/User';
+import * as argon2 from "argon2";
+import { Roles } from '../decorators/roles.decorator';
+import { UserRole } from '../users/users.service';
+import { AuthGuard } from '../auth/auth.guard';
 var moment = require('moment');
 
 @Controller('users')
@@ -14,7 +18,7 @@ export class UsersController {
         if(!users){
             users = new User();
             users.email = params.email;
-            users.password = params.password;
+            users.password = await argon2.hash(params.password);
             users.nickName = params.NickName;
             users.registrationDate = moment().format('YYYY-MM-DD').toString();
             users.adminPowerId = 0;
@@ -26,38 +30,33 @@ export class UsersController {
     }
 
     @Get('/lista/usuwanie')
-    async delete(@Res() res, @Body() params: Record<string, any>, @Req() request){
-        let users = await this.usersService.findOne(params.id);
-        const referrer = request.referrer || '/';
-    
-
+    async delete(@Res() res, @Query() query: { id: number }){
+        let users = await this.usersService.findOneId(query.id);
         
         if(!users){
             throw new HttpException("Nie znaleziono takiego użytkownika!", 404);
         }
 
-        
         users.deleted = moment().format('YYYY-MM-DD HH:mm:ss');
 
         this.usersService.deleted(users);
 
-        //res.redirect('/Home');
-        return res.redirect(referrer);
+        res.redirect('back');
     }
 
     @Get('/listaUsers/banowanie')
-    async ban(@Res() res, @Body() params: Record<string, any>){
-        let users = await this.usersService.findOne(params.id);
+    async ban(@Res() res, @Query() query: { id: number, date: Date }){
+        let users = await this.usersService.findOneId(query.id);
 
         if(!users){
             throw new HttpException("Nie znaleziono takiego użytkownika!", 404);
         }
 
-        users.bannedUntil = moment().format('YYYY-MM-DD hh:mm:ss').toString();
+        users.bannedUntil = query.date;
 
         this.usersService.ban(users);
 
-        res.redirect('/Home');
+        res.redirect('back');
     }
 
     @Get('/listaUsers')
@@ -66,10 +65,10 @@ export class UsersController {
         return users;
     }
 
+    @UseGuards(AuthGuard)
     @Get('/User')
-    async getUser(@Body() params: Record<string, any>){
-        let users = await this.usersService.findOneId(2);
-        console.log(params)//nie dostaje paramsów
+    async getUser(@Query() query: { id: number }){
+        let users = await this.usersService.findOneId(query.id);
         return users;
     }
 }

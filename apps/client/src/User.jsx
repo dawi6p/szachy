@@ -43,7 +43,7 @@ class User extends React.Component {
 		const { DataisLoaded, items, token, TokenisLoaded} = this.state;
 
 		if(!TokenisLoaded) return '';
-    	if(isExpired(token)) 
+    if(isExpired(token) || decodeToken(token).adminPower !== 1) 
 		{
 			return (<Navigate to="/Home" />);
 		}
@@ -61,7 +61,7 @@ class User extends React.Component {
           <p><label>Rgistration Date: {items.registrationDate}</label></p>
           <p><label>Banned until: {items.bannedUntil}</label></p>
           <p><label>Is Admin: {items.adminPowerId}</label></p>
-          <form method='get' action="../api/users/listaUsers/banowanie"><input type='hidden' name='id' value={items.id}></input><input type='submit' value='Bann User'></input></form>
+          <form method='get' action="../api/users/listaUsers/banowanie"><input type="datetime-local" name="date" required></input><input type='hidden' name='id' value={items.id}></input><input type='submit' value='Bann User'></input></form>
           <form method='get' action="../api/users/lista/usuwanie"><input type='hidden'  name='id' value={items.id}></input><input type='submit' value='Delete User'></input></form>
         </div>
       </>

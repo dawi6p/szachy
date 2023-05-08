@@ -38,7 +38,7 @@ class UsersList2 extends React.Component {
 		const { DataisLoaded, items, token, TokenisLoaded} = this.state;
 
 		if(!TokenisLoaded) return '';
-    	if(isExpired(token)) 
+    	if(isExpired(token) || decodeToken(token).adminPower !== 1) 
 		{
 			return (<Navigate to="/Home" />);
 		}

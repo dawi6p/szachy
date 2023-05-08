@@ -1,6 +1,7 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, Session } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res, Session } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as session from 'express-session';
+import { UsersService } from '../users/users.service';
 
 @Controller('auth')
 export class AuthController {

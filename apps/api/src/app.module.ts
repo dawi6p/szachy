@@ -14,6 +14,8 @@ import { Riddlemove } from 'output/entities/Riddlemove';
 import { Riddleuser } from 'output/entities/Riddleuser';
 import { Score } from 'output/entities/Score';
 import { User } from 'output/entities/User';
+import { RolesGuard } from './decorators/roles.guards';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -37,6 +39,11 @@ import { User } from 'output/entities/User';
     UsersModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

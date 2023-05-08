@@ -4,6 +4,10 @@ import { User } from 'output/entities/User';
 import { Repository, Like, IntegerType } from 'typeorm';
 
 // This should be a real class/interface representing a user entity
+export enum UserRole {
+  User = 0,
+  Admin = 1,
+} 
 
 @Injectable()
 export class UsersService {

@@ -39,7 +39,6 @@ class Chess extends Component {
         </div>
         { token }
       </div>
-      
     );
   }
 }

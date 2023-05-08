@@ -63,11 +63,11 @@ class UsersList2 extends React.Component {
                         <td> { item.nickName }</td>
                         <td> { item.email } </td>
                         <td> { item.adminPowerId } </td>
-                        <td><form method='post' action="user"><input type='submit' value='Szczegóły'></input></form></td>
+                        <td><form method='get' action='/admin/user'><input type='hidden' name='id' value={ item.id } ></input><input type='submit' value='Szczegóły'></input></form></td>
                     </tr>
 				))
 			}
-            </table>{this.state.token}
+            </table>
 		</div>
 	);
 }

@@ -1,30 +1,72 @@
-import { useEffect, useState } from 'react'
-import './App.css'
+import React from "react";
+import { Navigate } from 'react-router-dom';
+import { isExpired, decodeToken } from "react-jwt";
+import { useLocation } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import './App.css';
 
-function User() {
-  const [token, setToken] = useState('');
+class User extends React.Component {
 
-  useEffect(() =>{
-    fetch('/api')
-    .then((res)=>res.text())
-    .then(setToken);
-  }, []);
+	constructor(props) {
+		super(props);
+    const queryParameters = new URLSearchParams(window.location.search)
+    this.id = queryParameters.get("id")
+    
 
-  return (
-    <>
-      <div>
-        <p><label>User Id: </label></p>
-        <p><label>Nick Name: </label></p>
-        <p><label>E-mail: </label></p>
-        <p><label>Rgistration Date: </label></p>
-        <p><label>Banned until: </label></p>
-        <p><label>Is Admin: </label></p>
-        <form method='post'><input type='date' name='date'></input><input type='submit' value='Bann User'></input></form>
-        <form method='post'><input type='submit' value='Delete User'></input></form>
-      </div>
-      <h1>{token}</h1>
-    </>
-  )
+		this.state = {
+			items: [],
+			DataisLoaded: false,
+			token: String,
+			TokenisLoaded: false
+		};
+	}
+
+	componentDidMount() {
+    fetch("/api")
+			.then((res) => res.text())
+			.then((string) => {
+				this.setState({
+					token: string,
+					TokenisLoaded: true
+				});
+			})
+		fetch("/api/users/User?id="+this.id)
+			.then((res) => res.json())
+			.then((json) => {
+				this.setState({
+					items: json,
+					DataisLoaded: true
+				});
+			})
+	}
+	render() {
+		const { DataisLoaded, items, token, TokenisLoaded} = this.state;
+
+		if(!TokenisLoaded) return '';
+    	if(isExpired(token)) 
+		{
+			return (<Navigate to="/Home" />);
+		}
+
+    console.log(this.id)
+
+		if (!DataisLoaded) return <div><h1> Tańcz.... </h1> </div> ;
+
+		return (
+      <>
+        <div>
+          <p><label>User Id: {items.id}</label></p>
+          <p><label>Nick Name: {items.nickName}</label></p>
+          <p><label>E-mail: {items.email}</label></p>
+          <p><label>Rgistration Date: {items.registrationDate}</label></p>
+          <p><label>Banned until: {items.bannedUntil}</label></p>
+          <p><label>Is Admin: {items.adminPowerId}</label></p>
+          <form method='get' action="../api/users/listaUsers/banowanie"><input type='hidden' name='id' value={items.id}></input><input type='submit' value='Bann User'></input></form>
+          <form method='get' action="../api/users/lista/usuwanie"><input type='hidden'  name='id' value={items.id}></input><input type='submit' value='Delete User'></input></form>
+        </div>
+      </>
+    )
+}
 }
 
-export default User
+export default User;

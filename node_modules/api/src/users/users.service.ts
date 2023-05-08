@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'output/entities/User';
-import { Repository, Like } from 'typeorm';
+import { Repository, Like, IntegerType } from 'typeorm';
 
 // This should be a real class/interface representing a user entity
 
@@ -24,6 +24,11 @@ export class UsersService {
     return this.userRepository.findOneBy({email});
   }
 
+  findOneId(id: number): Promise<User | null> {
+    return this.userRepository.findOneBy({id});
+  }
+
+
   async remove(id: number): Promise<void> {
     await this.userRepository.delete(id);
   }
@@ -33,11 +38,11 @@ export class UsersService {
   }
 
   async deleted(User: User): Promise<void>{
-    await this.userRepository.update({deleted:User.deleted}, {deleted:User.deleted});
+    await this.userRepository.update({id:User.id}, {deleted:User.deleted});
   }
 
   async ban(User: User): Promise<void>{
-    await this.userRepository.update({bannedUntil:User.bannedUntil}, {bannedUntil:User.bannedUntil});
+    await this.userRepository.update({id:User.id}, {bannedUntil:User.bannedUntil});
   }
 }
   

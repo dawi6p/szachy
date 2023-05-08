@@ -20,6 +20,7 @@
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
     "mysql2": "^3.2.4",
+    "query-string": "^8.1.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-jwt": "^1.1.8",
     "react-router": "^6.11.1",

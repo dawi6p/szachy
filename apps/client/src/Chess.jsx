@@ -1,37 +1,47 @@
 import React, { Component } from "react";
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
 import { isExpired, decodeToken } from "react-jwt";
+import { Navigate } from 'react-router-dom';
 
 import WithMoveValidation from "./integrations/WithMoveValidation";
 
-function Chess(){
+class Chess extends Component {
 
-  const [token, setToken] = useState('');
-  let navigate = useNavigate();
-  
+  constructor(props) {
+		super(props);
 
-  useEffect(() =>{
-    fetch('/api')
-    .then((res)=>res.text())
-    .then((data) => {
-      setToken(data);
-      console.log(data);
-      if(isExpired(data)) navigate("/Home");
-    });
-    //if(isExpired(token)) navigate("/Home");
+    this.state = {
+			token: String,
+			TokenisLoaded: false
+		};
+  }
 
+  componentDidMount() {
+    fetch("/api")
+    .then((res) => res.text())
+    .then((String) => {
+      this.setState({
+        token: String,
+        TokenisLoaded: true
+      });
+    })
+  }
 
-  }, []);
+  render() {
+    const { TokenisLoaded, token } = this.state;
+    
+    if(!TokenisLoaded) return '';
+    if(isExpired(token)) return (<Navigate to="/Home" />);
 
-  return (
-    <div>
-      <div style={boardsContainer} >
-      <h1>{token}</h1>
-        <WithMoveValidation/>
+    return (
+      <div>
+        <div style={boardsContainer} >
+          <WithMoveValidation/>
+        </div>
+        { token }
       </div>
-    </div>
-  );
+      
+    );
+  }
 }
 
 export default Chess;

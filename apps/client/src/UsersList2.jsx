@@ -1,4 +1,6 @@
 import React from "react";
+import { Navigate } from 'react-router-dom';
+import { isExpired, decodeToken } from "react-jwt";
 import './App.css';
 
 class UsersList2 extends React.Component {
@@ -8,26 +10,22 @@ class UsersList2 extends React.Component {
 
 		this.state = {
 			items: [],
-			DataisLoaded: false
-		};
-        this.token = {
+			DataisLoaded: false,
 			token: String,
-			DataisLoaded: false
+			TokenisLoaded: false
 		};
 	}
 
 	componentDidMount() {
-        fetch(
-            "/api")
-                        .then((res) => res.json())
-                        .then((json) => {
-                            this.setState({
-                                token: json,
-                                DataisLoaded: true
-                            });
-                        })
-		fetch(
-"/api/users/listaUsers")
+        fetch("/api")
+			.then((res) => res.text())
+			.then((string) => {
+				this.setState({
+					token: string,
+					TokenisLoaded: true
+				});
+			})
+		fetch("/api/users/listaUsers")
 			.then((res) => res.json())
 			.then((json) => {
 				this.setState({
@@ -37,9 +35,15 @@ class UsersList2 extends React.Component {
 			})
 	}
 	render() {
-		const { DataisLoaded, items } = this.state;
-		if (!DataisLoaded) return <div>
-			<h1> Tańcz.... </h1> </div> ;
+		const { DataisLoaded, items, token, TokenisLoaded} = this.state;
+
+		if(!TokenisLoaded) return '';
+    	if(isExpired(token)) 
+		{
+			return (<Navigate to="/Home" />);
+		}
+
+		if (!DataisLoaded) return <div><h1> Tańcz.... </h1> </div> ;
 
 		return (
 		<div className = "App">
@@ -63,7 +67,7 @@ class UsersList2 extends React.Component {
                     </tr>
 				))
 			}
-            </table>{this.token.token}
+            </table>{this.state.token}
 		</div>
 	);
 }

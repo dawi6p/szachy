@@ -48,7 +48,7 @@ class UsersList2 extends React.Component {
 		return (
 		<div className = "App">
 			<h1> Lista wielkich użytkowników </h1>
-            <table>
+            <table class='container'>
                 <tr>
                     <th>User Id</th>
                     <th>Nick Name</th>

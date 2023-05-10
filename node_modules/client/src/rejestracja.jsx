@@ -4,27 +4,41 @@ function register() {
 
   return (
     <>
-      <form method="post" action="/api/users/rejestracja">
-        <label>Enter your NickName:
-        <input 
-          type="text" 
-          name="NickName" 
-        />
-        </label>
-        <label>Enter your password:
-          <input 
-            type="password" 
-            name="password" 
-          />
-          </label>
-          <label>Enter your email:
-          <input 
-            type="email" 
-            name="email" 
-          />
-          </label>
-          <input type="submit" />
-      </form>
+      <div class="login-box">
+        <h2>Register Page</h2>
+        <form method="post" action="/api/users/rejestracja">
+          <div class="user-box">
+            <input 
+                type="email" 
+                name="email" 
+                required
+              />
+            <label>E-mail</label>
+          </div>
+          <div class="user-box">
+            <input 
+              type="text" 
+              name="NickName" 
+            />
+            <label>Nick Name</label>
+          </div>
+          <div class="user-box">
+            <input 
+                type="password" 
+                name="password" 
+                required
+              />
+            <label>Password</label>
+          </div>
+          <div class="submit">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <input type='submit' value='Register Account'/>
+          </div>
+        </form>
+      </div>
     </>
   )
 }

@@ -65,6 +65,7 @@ export class UsersController {
         return users;
     }
 
+    //@Roles([UserRole.Admin])
     @UseGuards(AuthGuard)
     @Get('/User')
     async getUser(@Query() query: { id: number }){

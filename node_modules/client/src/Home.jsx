@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function Home() {
@@ -14,22 +12,34 @@ function Home() {
 
   return (
     <>
-      <form method="post" action="/api/auth/login">
-        <label>Enter your name:
-        <input 
-          type="text" 
-          name="username" 
-        />
-        </label>
-        <label>Enter your password:
-          <input 
-            type="password" 
-            name="password" 
-          />
-          </label>
-          <input type="submit" />
-      </form>
-      <h1>{token}</h1>
+      <div class="login-box">
+        <h2>Login Page</h2>
+        <form method="post" action="/api/auth/login">
+          <div class="user-box">
+            <input 
+                type="text" 
+                name="username" 
+                required
+              />
+            <label>Username</label>
+          </div>
+          <div class="user-box">
+            <input 
+                type="password" 
+                name="password" 
+                required
+              />
+            <label>Password</label>
+          </div>
+          <div class="submit">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <input type='submit' value='Log In'/>
+          </div>
+        </form>
+      </div>
     </>
   )
 }

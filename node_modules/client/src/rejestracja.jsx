@@ -35,7 +35,7 @@ function register() {
             <span></span>
             <span></span>
             <span></span>
-            <input type='submit' value='Register Account'/>
+            <input class='submitButton' type='submit' value='Register Account'/>
           </div>
         </form>
       </div>

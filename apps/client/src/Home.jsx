@@ -36,7 +36,7 @@ function Home() {
             <span></span>
             <span></span>
             <span></span>
-            <input type='submit' value='Log In'/>
+            <input class='submitButton' type='submit' value='Log In'/>
           </div>
         </form>
       </div>

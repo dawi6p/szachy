@@ -46,7 +46,7 @@ class UsersList2 extends React.Component {
 		if (!DataisLoaded) return <div><h1> Tańcz.... </h1> </div> ;
 
 		return (
-		<div className = "App">
+		<div class="text-white">
 			<h1> Lista wielkich użytkowników </h1>
             <table class='container'>
                 <tr>

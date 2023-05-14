@@ -34,43 +34,40 @@ class Profile extends Component {
     return (
       <div class='inline'>
         <NavBar/>
-
-        <div class=" shadow rounded overflow-hidden d-flex"> 
-            <div class="px-4 pt-0 pb-4 cover"> 
-                <div class="media align-items-end profile-head"> 
-                    <div class="profile mr-3">
-                        <a href="#" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a>
-                    </div> 
-                    <div class="media-body mb-5 text-white"> 
-                        <h4 class="mt-0 mb-0">Dawid Gach</h4> 
-                    </div> 
-                </div> 
+        <div class="px-4 pt-0 pb-4 cover"> 
+          <div class="media align-items-end profile-head"> 
+            <div class="profile mr-3">
+              <img src="/vite.svg" alt="profilePic" height='75' width='75'></img>
+              <a href="#" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a>
             </div> 
-            <div class="bg-light d-flex justify-content-end text-center"> 
-                <ul class="list-inline mb-0"> 
-                    <li class="list-inline-item"> 
-                        <h5 class="font-weight-bold mb-0 d-block">415</h5>
-                        <small class="text-muted">victories</small> 
-                    </li> 
-                    <li class="list-inline-item"> 
-                        <h5 class="font-weight-bold mb-0 d-block">104</h5>
-                        <small class="text-muted">Draws</small> 
-                    </li> 
-                    <li class="list-inline-item"> 
-                        <h5 class="font-weight-bold mb-0 d-block">340</h5>
-                        <small class="text-muted">Defets</small> 
-                    </li> 
-                </ul> 
+            
+            <div class="media-body mb-5 text-white"> 
+              <h4 class="mt-0 mb-0">Dawid Gach</h4> 
             </div> 
-            <div class="px-4 py-3"> 
-                <h5 class="mb-0">About</h5> 
-                <div class="p-4 rounded shadow-sm bg-light"> 
-                    <p class="font-italic mb-0">Web Developer</p> 
-                    <p class="font-italic mb-0">Lives in New York</p> 
-                    <p class="font-italic mb-0">Photographer</p> 
-                </div> 
+            <div class="d-flex justify-content-end text-center"> 
+              <ul class="list-inline mb-0"> 
+                <li class="list-inline-item text-success"> 
+                  <h5 class="font-weight-bold mb-0">415</h5>
+                  <small>victories</small> 
+                </li> 
+                <li class="list-inline-item text-secondary"> 
+                  <h5 class="font-weight-bold mb-0">104</h5>
+                  <small>Draws</small> 
+                </li> 
+                <li class="list-inline-item text-danger"> 
+                  <h5 class="font-weight-bold mb-0">340</h5>
+                  <small>Defets</small> 
+                </li> 
+              </ul> 
             </div> 
-        </div>
+          </div> 
+          <div class="px-4 py-3"> 
+            <h5 class="mb-0">About</h5> 
+            <div class="p-4 rounded shadow-sm bg-light"> 
+              <p class="font-italic mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa explicabo amet corrupti perspiciatis nulla quidem voluptates,<br/> mollitia repudiandae, odit quo obcaecati accusantium sapiente inventore sint? Aspernatur nobis rem distinctio assumenda.</p> 
+            </div> 
+          </div>
+        </div> 
       </div>
     );
   }

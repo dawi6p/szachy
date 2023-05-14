@@ -54,7 +54,7 @@ class User extends React.Component {
 
 		return (
       <>
-        <div>
+        <div class="text-white">
           <p><label>User Id: {items.id}</label></p>
           <p><label>Nick Name: {items.nickName}</label></p>
           <p><label>E-mail: {items.email}</label></p>

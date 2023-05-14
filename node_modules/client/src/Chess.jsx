@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { isExpired, decodeToken } from "react-jwt";
 import { Navigate } from 'react-router-dom';
+import NavBar from "./integrations/NavBar";
 
 import WithMoveValidation from "./integrations/WithMoveValidation";
 
@@ -33,11 +34,11 @@ class Chess extends Component {
     if(isExpired(token)) return (<Navigate to="/Home" />);
 
     return (
-      <div>
+      <div class='inline'>
+        <NavBar/>
         <div style={boardsContainer} >
           <WithMoveValidation/>
         </div>
-        { token }
       </div>
     );
   }

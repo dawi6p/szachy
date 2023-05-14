@@ -339,3 +339,8 @@ body {
   display: inline-flex;
   height: 100vh;
 }
+
+.imgProfile
+{
+  margin: 20px;
+}

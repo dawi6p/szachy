@@ -337,8 +337,8 @@ body {
 
 .inline{
   display: inline-flex;
-  height: 100vh;
-  width: 100vw;
+  max-height: 100vh;
+  max-width: 100vw;
 }
 
 .imgProfile
@@ -348,7 +348,7 @@ body {
 
 .cover{
   padding: 3rem;
-  max-width: 100vw;
+  width: 100vw;
 }
 
 .profileTextField

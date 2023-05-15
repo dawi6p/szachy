@@ -34,10 +34,10 @@ class Profile extends Component {
     return (
       <div class='inline'>
         <NavBar/>
-        <div class="px-4 pt-0 pb-4 cover"> 
+        <div class="cover"> 
           <div class="media align-items-end profile-head"> 
             <div class="profile mr-3">
-              <img src="/vite.svg" alt="profilePic" height='75' width='75'></img>
+              <img src="/vite.svg" alt="profilePic" height='75' width='75' class='imgProfile'></img>
               <a href="#" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a>
             </div> 
             
@@ -63,7 +63,7 @@ class Profile extends Component {
           </div> 
           <div class="px-4 py-3"> 
             <h5 class="mb-0">About</h5> 
-            <div class="p-4 rounded shadow-sm bg-light"> 
+            <div class="p-4 rounded shadow-sm bg-light profileTextField"> 
               <p class="font-italic mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa explicabo amet corrupti perspiciatis nulla quidem voluptates,<br/> mollitia repudiandae, odit quo obcaecati accusantium sapiente inventore sint? Aspernatur nobis rem distinctio assumenda.</p> 
             </div> 
           </div>

@@ -16,6 +16,7 @@ import { Score } from 'output/entities/Score';
 import { User } from 'output/entities/User';
 import { RolesGuard } from './decorators/roles.guards';
 import { APP_GUARD } from '@nestjs/core';
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -36,7 +37,8 @@ import { APP_GUARD } from '@nestjs/core';
       rootPath: join(__dirname, '../..', 'client', 'dist'),
     }),
     AuthModule,
-    UsersModule
+    UsersModule,
+    MessagesModule
   ],
   controllers: [AppController],
   providers: [

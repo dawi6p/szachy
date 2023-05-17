@@ -36,7 +36,7 @@ class Profile extends Component {
         <NavBar/>
         <div class="cover"> 
           <div class="media align-items-end profile-head"> 
-            <div class="profile mr-3">
+            <div class="profile mr-5 ml-5">
               <img src="/vite.svg" alt="profilePic" height='75' width='75' class='imgProfile'></img>
               <a href="#" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a>
             </div> 
@@ -45,7 +45,7 @@ class Profile extends Component {
               <h4 class="mt-0 mb-0">Dawid Gach</h4> 
             </div> 
             <div class="d-flex justify-content-end text-center"> 
-              <ul class="list-inline mb-0"> 
+              <ul class="list-inline mb-0 mr-5 ml-5"> 
                 <li class="list-inline-item text-success"> 
                   <h5 class="font-weight-bold mb-0">415</h5>
                   <small>victories</small> 

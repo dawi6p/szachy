@@ -22,6 +22,8 @@ export class MessagesGateway {
 
     this.serwer.emit('message',message);
 
+    console.log(message);
+
     return message;
   }
 

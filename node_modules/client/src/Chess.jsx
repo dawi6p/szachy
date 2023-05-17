@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component} from "react";
 import { isExpired, decodeToken } from "react-jwt";
 import io from "socket.io-client";
 import { Navigate } from 'react-router-dom';
@@ -21,9 +21,13 @@ class Chess extends Component {
   }
 
   getData = items => {
-    console.log(items);
     this.setState({ messages: items });
   };
+
+  changeData = () => {
+    var sendMessage = {id: decodeToken(token).id, name: decodeToken(token).nickName, text: message };
+    socket.emit("createMessage", sendMessage);
+  }
   
   componentDidMount() {
     fetch("/api")
@@ -37,6 +41,7 @@ class Chess extends Component {
 
     socket.emit('findAllMessages');
     socket.on("messages", this.getData);
+    socket.on("message", this.changeData);
   }
 
   render() {
@@ -51,11 +56,23 @@ class Chess extends Component {
         <div style={boardsContainer} >
           <WithMoveValidation/>
         </div>
-        {
-            this.state.messages.map((item) => (
-            <><td> {item.id} </td><td> {item.name}</td><td> {item.text} </td></>
-          ))
-        }
+        <div class="chat">
+          <div class="user-box w-100">
+            <form>
+              <input 
+                type="text" 
+                name="Wiadomość" 
+                required
+              />
+              <label>Wiadomość</label>
+              </form>
+            </div>
+            {
+              this.state.messages.map((item) => (
+              <div class="text-white">{item.name}: {item.text}</div>
+              ))
+            }
+         </div>
       </div>
     );
   }

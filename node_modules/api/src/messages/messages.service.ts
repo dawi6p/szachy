@@ -7,10 +7,9 @@ export class MessagesService {
   messages: Message[] = [{id: -1, name: "nicosc", text: 'patrze sie na ciebie'}];
   clientToUser = {};
 
-  identify(name: string, clientId: string)
+  identify(id: number,name: string, clientId: string)
   {
-    this.clientToUser[clientId] = name;
-
+    this.clientToUser[clientId] = {id: id, name: name};
     return Object.values(this.clientToUser);
   }
 
@@ -19,8 +18,12 @@ export class MessagesService {
     return this.clientToUser[clientId];
   }
 
-  create(createMessageDto: CreateMessageDto) {
-    const message = {...createMessageDto};
+  create(createMessageDto: CreateMessageDto, clientId: string) {
+    const message = {
+      id: this.clientToUser[clientId].id,
+      name: this.clientToUser[clientId].name,
+      text: createMessageDto.text,
+    };
     this.messages.push(message);
     return message;
   }

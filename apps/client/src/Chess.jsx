@@ -15,18 +15,11 @@ class Chess extends Component {
 			token: String,
 			TokenisLoaded: false,
       messages: [],
+      messageText: String,
+      done: false,
 		};
 
     socket = io("http://localhost:3000");
-  }
-
-  getData = items => {
-    this.setState({ messages: items });
-  };
-
-  changeData = () => {
-    var sendMessage = {id: decodeToken(token).id, name: decodeToken(token).nickName, text: message };
-    socket.emit("createMessage", sendMessage);
   }
   
   componentDidMount() {
@@ -39,9 +32,24 @@ class Chess extends Component {
       });
     })
 
-    socket.emit('findAllMessages');
-    socket.on("messages", this.getData);
-    socket.on("message", this.changeData);
+    socket.emit('findAllMessages', {}, (items) =>{
+      this.setState({ messages: items });
+    });
+
+    socket.on("message", (items) =>{
+      socket.emit('findAllMessages', {}, (items) =>{
+        this.setState({ messages: items });
+      });
+    });
+  }
+
+  sendMessage = e =>{
+    e.preventDefault();
+    socket.emit('createMessage', {text: this.state.messageText})
+  }
+
+  handleMessageTextChanged(event) {
+    this.setState({ messageText: event.target.value });
   }
 
   render() {
@@ -49,6 +57,16 @@ class Chess extends Component {
     
     if(!TokenisLoaded) return '';
     if(isExpired(token)) return (<Navigate to="/Home" />);
+    else{
+      if(!this.state.done)
+      {
+        this.state.done = true;
+        var temp = decodeToken(token);
+
+        socket.emit('join', {id: temp.id, name: temp.nickName});
+      }
+      
+    }
 
     return (
       <div class='inline'>
@@ -58,20 +76,22 @@ class Chess extends Component {
         </div>
         <div class="chat">
           <div class="user-box w-100">
-            <form>
-              <input 
-                type="text" 
-                name="Wiadomość" 
-                required
-              />
+            <form onSubmit={this.sendMessage}>
+                <input 
+                  required
+                  value={this.state.messageText}
+                  onChange={this.handleMessageTextChanged.bind(this)}
+                />
               <label>Wiadomość</label>
-              </form>
+            </form>
             </div>
-            {
-              this.state.messages.map((item) => (
-              <div class="text-white">{item.name}: {item.text}</div>
-              ))
-            }
+            <div class='messageList'>
+              {
+                this.state.messages.map((item) => (
+                <div class="text-white">{item.name}: {item.text}</div>
+                ))
+              }
+            </div>
          </div>
       </div>
     );

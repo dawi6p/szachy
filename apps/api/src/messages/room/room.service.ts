@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class RoomService {
-    roomNumber: number;
-    userNumber: number;
-    roomIdTable: {};
+    roomNumber = 0;
+    userNumber = 0;
+    roomIdTable = {};
 
-    setRoomID(userId: number){
+    setRoomID(userId: string){
         this.userNumber++;
         if(this.userNumber%2 == 1){
             this.roomNumber++;

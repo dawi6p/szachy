@@ -31,7 +31,7 @@ class Chess extends Component {
         TokenisLoaded: true
       });
     })
-
+    
     socket.emit('findAllMessages', {}, (items) =>{
       this.setState({ messages: items });
     });

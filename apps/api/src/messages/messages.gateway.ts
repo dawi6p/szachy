@@ -2,6 +2,20 @@ import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, Conne
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Server, Socket  } from 'socket.io';
+import { RoomService } from './room/room.service';
+import { decode } from 'punycode';
+import { Request, ExecutionContext } from '@nestjs/common';
+
+export interface IRequest extends Request {
+  session: any;
+}
+
+export function Logger(req: IRequest) {
+  var temp = req.session.tokem;
+  temp = decode(temp);
+  console.log(temp);
+  return temp.id; 
+};
 
 @WebSocketGateway(
   {
@@ -14,23 +28,24 @@ import { Server, Socket  } from 'socket.io';
 export class MessagesGateway {
   @WebSocketServer() serwer: Server;
 
-  constructor(private readonly messagesService: MessagesService) {}
+  constructor(private readonly messagesService: MessagesService, public room: RoomService) {  }
 
   @SubscribeMessage('createMessage')
-  async create(@MessageBody() createMessageDto: CreateMessageDto, @ConnectedSocket() client: Socket,) {
+  async create(@MessageBody() createMessageDto: CreateMessageDto, @ConnectedSocket() client: Socket) {
     const message = await this.messagesService.create(createMessageDto, client.id);
 
-    this.serwer.emit('message',message);
-
+    this.serwer.in("").emit('message',message);
     //console.log(message);
 
     return message;
   }
 
   @SubscribeMessage('findAllMessages')
-  async findAll() {
+  async findAll(context: ExecutionContext) {
+    const req: IRequest = context.switchToHttp().getRequest();
+    Logger(req);
     const messages = await this.messagesService.findAll();
-    this.serwer.emit('messages',messages);
+    this.serwer.in("1").emit('messages',messages);
     console.log(messages);
     return messages;
   }
@@ -41,8 +56,14 @@ export class MessagesGateway {
   }
 
   @SubscribeMessage('join')
-  join(@MessageBody('name') name: string,@MessageBody('id') id: number, @ConnectedSocket() client: Socket)
+  async join(@MessageBody('name') name: string,@MessageBody('id') id: number, @ConnectedSocket() client: Socket)
   {
-    return this.messagesService.identify(id, name, client.id);
+    this.room.setRoomID(id);
+    var temp = await this.messagesService.identify(id, name, client.id);
+    console.log(temp);
+    this.serwer.on('connection', function(socket) {
+      socket.join(this.room.roomIdTable[id].roomId);
+    });
+    return temp;
   }
 }

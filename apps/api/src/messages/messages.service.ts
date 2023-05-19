@@ -4,7 +4,7 @@ import { Message } from './entities/message.entity';
 
 @Injectable()
 export class MessagesService {
-  messages: Message[] = [{id: -1, name: "nicosc", text: 'patrze sie na ciebie'}];
+  messages: Message[] = [{id: -1, name: "nicosc", text: 'patrze sie na ciebie', idRoom: 1}];
   clientToUser = {};
 
   identify(id: number,name: string, clientId: string)
@@ -18,18 +18,22 @@ export class MessagesService {
     return this.clientToUser[clientId];
   }
 
-  create(createMessageDto: CreateMessageDto, clientId: string) {
+  create(createMessageDto: CreateMessageDto, clientId: string, idroom: number) {
     const message = {
       id: this.clientToUser[clientId].id,
       name: this.clientToUser[clientId].name,
       text: createMessageDto.text,
+      idRoom: idroom,
     };
+
     this.messages.push(message);
     return message;
   }
 
-  findAll() {
-    return this.messages;
+  findAll(idroom: number) {
+    const Return = this.messages.filter(room => room.idRoom == idroom);
+    console.log(Return);
+    return Return;
   }
 
   findOne(id: number) {

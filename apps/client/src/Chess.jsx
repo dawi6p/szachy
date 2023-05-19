@@ -26,15 +26,19 @@ class Chess extends Component {
     fetch("/api")
     .then((res) => res.text())
     .then((String) => {
+      
+      var temp = decodeToken(String);
+      socket.emit('join', {id: temp.id, name: temp.nickName});
+
+      socket.emit('findAllMessages', {}, (items) =>{
+        this.setState({ messages: items });
+      });
+
       this.setState({
         token: String,
         TokenisLoaded: true
       });
     })
-    
-    socket.emit('findAllMessages', {}, (items) =>{
-      this.setState({ messages: items });
-    });
 
     socket.on("message", (items) =>{
       socket.emit('findAllMessages', {}, (items) =>{
@@ -61,9 +65,7 @@ class Chess extends Component {
       if(!this.state.done)
       {
         this.state.done = true;
-        var temp = decodeToken(token);
 
-        socket.emit('join', {id: temp.id, name: temp.nickName});
       }
       
     }

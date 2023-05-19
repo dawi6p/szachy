@@ -18,9 +18,11 @@ export class MessagesGateway {
 
   @SubscribeMessage('createMessage')
   async create(@MessageBody() createMessageDto: CreateMessageDto, @ConnectedSocket() client: Socket) {
-    const message = await this.messagesService.create(createMessageDto, client.id);
+    const id = this.messagesService.clientToUser[client.id].id;
 
-    this.serwer.in(this.room.roomIdTable[client.id].roomId).emit('message',message);
+    const message = await this.messagesService.create(createMessageDto, client.id, this.room.roomIdTable[id].roomId);
+
+    this.serwer.in(this.room.roomIdTable[id].roomId).emit('message',message);
     //console.log(message);
 
     return message;
@@ -28,8 +30,12 @@ export class MessagesGateway {
 
   @SubscribeMessage('findAllMessages')
   async findAll(@ConnectedSocket() client: Socket) {
-    const messages = await this.messagesService.findAll();
-    this.serwer.in(this.room.roomIdTable[client.id].roomId).emit('messages',messages);
+    const id = this.messagesService.clientToUser[client.id].id;
+
+    if(id == undefined) return;
+
+    const messages = await this.messagesService.findAll(this.room.roomIdTable[id].roomId);
+    this.serwer.in(this.room.roomIdTable[id].roomId).emit('messages',messages);
     console.log(messages);
     return messages;
   }
@@ -40,13 +46,13 @@ export class MessagesGateway {
   }*/
 
   @SubscribeMessage('join')
-  async join(@MessageBody('name') name: string,@MessageBody('id') id: number, @ConnectedSocket() client: Socket)
+  async join(@MessageBody('name') name: string, @MessageBody('id') id: number, @ConnectedSocket() client: Socket)
   {
-    this.room.setRoomID(client.id);
+    this.room.setRoomID(id);
 
     var temp = await this.messagesService.identify(id, name, client.id);
     console.log(this.room)
-    client.join(this.room.roomIdTable[client.id].roomId);
+    client.join(this.room.roomIdTable[id].roomId);
     return temp;
   }
 }

@@ -6,23 +6,28 @@ export class RoomService {
     userNumber = 0;
     roomIdTable = {};
 
+    getRandomBoolean(): boolean {
+        return Math.random() < 0.5;
+    }
+
     setRoomID(userId: number){
+        let temp;
         if(this.roomIdTable[userId] != null || this.roomIdTable[userId] != undefined) return;
         this.userNumber++;
         if(this.userNumber%2 == 1){
+            temp = this.getRandomBoolean()
             this.roomNumber++;
         }else{
-            //const Return = this.roomIdTable.filter(room => room.roomNumber == idroom);
+            temp = this.findIfWhite();
         }
-        this.roomIdTable[userId] = {roomId: this.roomNumber, white: true}
+        this.roomIdTable[userId] = {roomId: this.roomNumber, white: temp}
     }
 
-    findIfWhite(roomId: number): any {
+    findIfWhite(): any {
         const result = Object.values(this.roomIdTable).find(
             (room: { roomId: number }) =>
-                room.roomId === roomId
+                room.roomId === this.roomNumber
         );
-    
-        return result;
+        return !result["white"];
     }
 }

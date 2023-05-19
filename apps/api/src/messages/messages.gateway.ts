@@ -3,6 +3,7 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Server, Socket  } from 'socket.io';
 import { RoomService } from './room/room.service';
+import { CreateChessDto } from './dto/create-chess.dto';
 
 @WebSocketGateway(
   {
@@ -36,7 +37,7 @@ export class MessagesGateway {
 
     const messages = await this.messagesService.findAll(this.room.roomIdTable[id].roomId);
     this.serwer.in(this.room.roomIdTable[id].roomId).emit('messages',messages);
-    console.log(messages);
+    //console.log(messages);
     return messages;
   }
 
@@ -54,5 +55,29 @@ export class MessagesGateway {
     console.log(this.room)
     client.join(this.room.roomIdTable[id].roomId);
     return temp;
+  }
+
+  @SubscribeMessage('createChess')
+  async createChess(@MessageBody() createChessDto: CreateChessDto, @ConnectedSocket() client: Socket) {
+    const id = this.messagesService.clientToUser[client.id].id;
+
+    const message = await this.messagesService.createChess(createChessDto, client.id, this.room.roomIdTable[id].roomId);
+
+    this.serwer.in(this.room.roomIdTable[id].roomId).emit('message',message);
+    //console.log(message);
+
+    return message;
+  }
+
+  @SubscribeMessage('findAllChess')
+  async findAllChess(@ConnectedSocket() client: Socket) {
+    const id = this.messagesService.clientToUser[client.id].id;
+
+    if(id == undefined) return;
+
+    const messages = await this.messagesService.findAllChess(this.room.roomIdTable[id].roomId);
+    this.serwer.in(this.room.roomIdTable[id].roomId).emit('messages',messages);
+    console.log(messages);
+    return messages;
   }
 }

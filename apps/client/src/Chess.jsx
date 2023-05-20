@@ -17,23 +17,34 @@ class Chess extends Component {
       messages: [],
       messageText: String,
       done: false,
+      fen: String,
 		};
 
     socket = io("http://localhost:3000");
+  }
+
+  callbackFunction = async (_fen) => {
+    await this.setState({
+      fen: _fen,
+    });
+    socket.emit('createChess', {text: _fen})
+    console.log(_fen);
   }
   
   componentDidMount() {
     fetch("/api")
     .then((res) => res.text())
     .then((String) => {
-      
-      var temp = decodeToken(String);
-      socket.emit('join', {id: temp.id, name: temp.nickName});
+      if(!isExpired(String))
+      {
+        var temp = decodeToken(String);
+        socket.emit('join', {id: temp.id, name: temp.nickName});
 
-      socket.emit('findAllMessages', {}, (items) =>{
+        socket.emit('findAllMessages', {}, (items) =>{
         this.setState({ messages: items });
       });
-
+      }
+      
       this.setState({
         token: String,
         TokenisLoaded: true
@@ -49,7 +60,7 @@ class Chess extends Component {
 
   sendMessage = e =>{
     e.preventDefault();
-    socket.emit('createMessage', {text: this.state.messageText})
+    socket.emit('createMessage', {text: this.state.messageText});
   }
 
   handleMessageTextChanged(event) {
@@ -74,7 +85,7 @@ class Chess extends Component {
       <div class='inline'>
         <NavBar/>
         <div style={boardsContainer} >
-          <WithMoveValidation/>
+          <WithMoveValidation parentCallback = {this.callbackFunction} opMove = {this.state.fen}/>
         </div>
         <div class="chat">
           <div class="user-box w-100">

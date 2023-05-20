@@ -1,5 +1,5 @@
-import { chess } from "../entities/chess.entity";
+import { Chess } from "../entities/chess.entity";
 
-export class CreateChessDto extends chess {
+export class CreateChessDto extends Chess {
 
 }

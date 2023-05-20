@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Message } from './entities/message.entity';
-import { chess } from './entities/chess.entity';
+import { Chess } from './entities/chess.entity';
 import { CreateChessDto } from './dto/create-chess.dto';
 
 @Injectable()
 export class MessagesService {
   messages: Message[] = [{id: -1, name: "nicosc", text: 'patrze sie na ciebie', idRoom: 1}];
-  chessMoves: chess[] = [{id: -1, move: 'patrze sie na ciebie', idRoom: 1}];
+  chessMoves: Chess[] = [{id: -1, text: 'patrze sie na ciebie', idRoom: 1}];
   clientToUser = {};
 
   identify(id: number,name: string, clientId: string)
@@ -40,9 +40,11 @@ export class MessagesService {
   }
 
   createChess(createChessDto: CreateChessDto, clientId: string, idroom: number) {
+
+    console.log(createChessDto);
     const message = {
       id: this.clientToUser[clientId].id,
-      move: createChessDto.move,
+      text: createChessDto.text,
       idRoom: idroom,
     };
 

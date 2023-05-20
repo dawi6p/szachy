@@ -1,5 +1,5 @@
-export class chess {
+export class Chess {
     id: number;
-    move: string;
+    text: string;
     idRoom: number;
 }

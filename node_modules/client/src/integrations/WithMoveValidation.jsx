@@ -21,6 +21,10 @@ class HumanVsHuman extends Component {
     history: []
   };
 
+  sendData = (fen) => {
+    this.props.parentCallback(fen);
+}
+
   componentDidMount() {
     this.game = new Chess();
   }
@@ -121,6 +125,7 @@ class HumanVsHuman extends Component {
     // illegal move
     if (move === null) return;
 
+    this.sendData(this.game.fen());
     this.setState({
       fen: this.game.fen(),
       history: this.game.history({ verbose: true }),
@@ -150,42 +155,53 @@ class HumanVsHuman extends Component {
   }
 }
 
-export default function WithMoveValidation() {
-  return (
-    <div>
-      <HumanVsHuman>
-        {({
-          position,
-          onDrop,
-          onMouseOverSquare,
-          onMouseOutSquare,
-          squareStyles,
-          dropSquareStyle,
-          onDragOverSquare,
-          onSquareClick,
-          onSquareRightClick
-        }) => (
-          <Chessboard
-            id="humanVsHuman"
-            width={620}
-            position={position}
-            //onDrop={onDrop}
-            onMouseOverSquare={onMouseOverSquare}
-            onMouseOutSquare={onMouseOutSquare}
-            boardStyle={{
-              borderRadius: "5px",
-              boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
-            }}
-            squareStyles={squareStyles}
-            dropSquareStyle={dropSquareStyle}
-            //onDragOverSquare={onDragOverSquare}
-            onSquareClick={onSquareClick}
-            onSquareRightClick={onSquareRightClick}
-          />
-        )}
-      </HumanVsHuman>
-    </div>
-  );
+export default class WithMoveValidation extends Component {
+  callbackFunction = (childData) => {
+    this.sendData(childData);
+  }
+
+  sendData = (fen) => {
+    this.props.parentCallback(fen);
+  }
+
+  render()
+  {
+    return (
+      <div>
+        <HumanVsHuman parentCallback = {this.callbackFunction} opMove={this.props.opMove}>
+          {({
+            position,
+            onDrop,
+            onMouseOverSquare,
+            onMouseOutSquare,
+            squareStyles,
+            dropSquareStyle,
+            onDragOverSquare,
+            onSquareClick,
+            onSquareRightClick
+          }) => (
+            <Chessboard
+              id="humanVsHuman"
+              width={620}
+              position={position}
+              //onDrop={onDrop}
+              onMouseOverSquare={onMouseOverSquare}
+              onMouseOutSquare={onMouseOutSquare}
+              boardStyle={{
+                borderRadius: "5px",
+                boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
+              }}
+              squareStyles={squareStyles}
+              dropSquareStyle={dropSquareStyle}
+              //onDragOverSquare={onDragOverSquare}
+              onSquareClick={onSquareClick}
+              onSquareRightClick={onSquareRightClick}
+            />
+          )}
+        </HumanVsHuman>
+      </div>
+    );
+  }
 }
 
 const squareStyling = ({ pieceSquare, history }) => 

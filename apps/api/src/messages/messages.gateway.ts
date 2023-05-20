@@ -63,8 +63,8 @@ export class MessagesGateway {
 
     const message = await this.messagesService.createChess(createChessDto, client.id, this.room.roomIdTable[id].roomId);
 
-    this.serwer.in(this.room.roomIdTable[id].roomId).emit('message',message);
-    //console.log(message);
+    this.serwer.in(this.room.roomIdTable[id].roomId).emit('chessMove',message);
+    console.log(message);
 
     return message;
   }
@@ -76,7 +76,7 @@ export class MessagesGateway {
     if(id == undefined) return;
 
     const messages = await this.messagesService.findAllChess(this.room.roomIdTable[id].roomId);
-    this.serwer.in(this.room.roomIdTable[id].roomId).emit('messages',messages);
+    this.serwer.in(this.room.roomIdTable[id].roomId).emit('chessMoves',messages);
     console.log(messages);
     return messages;
   }

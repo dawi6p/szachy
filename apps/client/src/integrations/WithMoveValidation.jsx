@@ -23,10 +23,36 @@ class HumanVsHuman extends Component {
 
   sendData = (fen) => {
     this.props.parentCallback(fen);
-}
+  }
 
   componentDidMount() {
     this.game = new Chess();
+  }
+
+  componentDidUpdate() {
+    console.log(this.props.opMovef)
+    console.log(this.props.opMovet)
+    if (this.props.opMovef != "") {
+
+
+      let move = this.game.move({
+        from: this.props.opMovef,
+        to: this.props.opMovet,
+        promotion: "q" // always promote to a queen for example simplicity
+      });
+  
+      // illegal move
+      if (move === null) return;
+  
+      this.setState({
+        fen: this.game.fen(),
+        history: this.game.history({ verbose: true }),
+        pieceSquare: ""
+      });
+
+      //this.game.move(this.props.opMove)
+      //zaktualizuj palnsze!!!!!!
+    }
   }
 
   // keep clicked square style and remove hint squares
@@ -125,7 +151,7 @@ class HumanVsHuman extends Component {
     // illegal move
     if (move === null) return;
 
-    this.sendData(this.game.fen());
+    this.sendData(move);
     this.setState({
       fen: this.game.fen(),
       history: this.game.history({ verbose: true }),
@@ -168,7 +194,7 @@ export default class WithMoveValidation extends Component {
   {
     return (
       <div>
-        <HumanVsHuman parentCallback = {this.callbackFunction} opMove={this.props.opMove}>
+        <HumanVsHuman parentCallback = {this.callbackFunction} opMovef = {this.props.opMovef} opMovet  = {this.props.opMovet}>
           {({
             position,
             onDrop,
@@ -199,6 +225,7 @@ export default class WithMoveValidation extends Component {
             />
           )}
         </HumanVsHuman>
+        {this.props.opMove}
       </div>
     );
   }

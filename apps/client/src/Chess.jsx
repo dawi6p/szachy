@@ -17,18 +17,20 @@ class Chess extends Component {
       messages: [],
       messageText: String,
       done: false,
-      fen: String,
+      from:"",
+      to: "",
 		};
 
     socket = io("http://localhost:3000");
   }
 
   callbackFunction = async (_fen) => {
-    await this.setState({
+    /*await this.setState({
       fen: _fen,
-    });
+    });*/
     socket.emit('createChess', {text: _fen})
-    console.log(_fen);
+    //socket.emit('findAllChess');
+    //console.log(_fen);
   }
   
   componentDidMount() {
@@ -54,6 +56,14 @@ class Chess extends Component {
     socket.on("message", (items) =>{
       socket.emit('findAllMessages', {}, (items) =>{
         this.setState({ messages: items });
+      });
+    });
+
+    socket.on("chessMove", (items) =>{
+      console.log(items)
+      this.setState({
+        from: items.text.from,
+        to: items.text.to,
       });
     });
   }
@@ -85,7 +95,7 @@ class Chess extends Component {
       <div class='inline'>
         <NavBar/>
         <div style={boardsContainer} >
-          <WithMoveValidation parentCallback = {this.callbackFunction} opMove = {this.state.fen}/>
+          <WithMoveValidation parentCallback = {this.callbackFunction} opMovef = {this.state.from} opMovet  = {this.state.to}/>
         </div>
         <div class="chat">
           <div class="user-box w-100">

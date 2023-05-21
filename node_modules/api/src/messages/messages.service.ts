@@ -52,11 +52,11 @@ export class MessagesService {
     return message;
   }
 
-  findAllChess(idroom: number) {
+  /*findAllChess(idroom: number) {
     const Return = this.chessMoves.filter(room => room.idRoom == idroom);
-    console.log(Return);
-    return Return;
-  }
+    console.log(Return[Return.length - 1]);
+    return Return[Return.length - 1];
+  }*/
 
   /*findOne(id: number) {
     return `This action returns a #${id} message`;

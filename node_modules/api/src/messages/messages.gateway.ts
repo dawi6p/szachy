@@ -62,14 +62,15 @@ export class MessagesGateway {
     const id = this.messagesService.clientToUser[client.id].id;
 
     const message = await this.messagesService.createChess(createChessDto, client.id, this.room.roomIdTable[id].roomId);
+    client.broadcast.in(this.room.roomIdTable[id].roomId).emit('chessMove',message);
 
-    this.serwer.in(this.room.roomIdTable[id].roomId).emit('chessMove',message);
+    //this.serwer.in(this.room.roomIdTable[id].roomId).emit('chessMove',message);
     console.log(message);
 
     return message;
   }
 
-  @SubscribeMessage('findAllChess')
+  /*@SubscribeMessage('findAllChess')
   async findAllChess(@ConnectedSocket() client: Socket) {
     const id = this.messagesService.clientToUser[client.id].id;
 
@@ -79,5 +80,5 @@ export class MessagesGateway {
     this.serwer.in(this.room.roomIdTable[id].roomId).emit('chessMoves',messages);
     console.log(messages);
     return messages;
-  }
+  }*/
 }

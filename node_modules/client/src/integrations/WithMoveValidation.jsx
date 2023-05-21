@@ -29,29 +29,26 @@ class HumanVsHuman extends Component {
     this.game = new Chess();
   }
 
-  componentDidUpdate() {
-    console.log(this.props.opMovef)
-    console.log(this.props.opMovet)
-    if (this.props.opMovef != "") {
-
-
-      let move = this.game.move({
-        from: this.props.opMovef,
-        to: this.props.opMovet,
-        promotion: "q" // always promote to a queen for example simplicity
-      });
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.opMovef !== prevProps.opMovef ||
+      this.props.opMovet !== prevProps.opMovet
+    ) {
+      if (this.props.opMovef !== "" && this.props.opMovet !== "") {
+        let move = this.game.move({
+          from: this.props.opMovef,
+          to: this.props.opMovet,
+          promotion: "q"
+        });
   
-      // illegal move
-      if (move === null) return;
+        if (move === null) return;
   
-      this.setState({
-        fen: this.game.fen(),
-        history: this.game.history({ verbose: true }),
-        pieceSquare: ""
-      });
-
-      //this.game.move(this.props.opMove)
-      //zaktualizuj palnsze!!!!!!
+        this.setState({
+          fen: this.game.fen(),
+          history: this.game.history({ verbose: true }),
+          pieceSquare: ""
+        });
+      }
     }
   }
 

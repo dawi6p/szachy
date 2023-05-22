@@ -3,6 +3,7 @@ import { isExpired, decodeToken } from "react-jwt";
 import io from "socket.io-client";
 import { Navigate } from 'react-router-dom';
 import NavBar from "./integrations/NavBar";
+import MyTimer from "./integrations/MyTimer";
 
 import WithMoveValidation from "./integrations/WithMoveValidation";
 var socket;
@@ -20,6 +21,7 @@ class Chess extends Component {
       from:"",
       to: "",
       white: Boolean,
+      pause: Boolean
 		};
 
     socket = io("http://localhost:3000");
@@ -30,6 +32,7 @@ class Chess extends Component {
       fen: _fen,
     });*/
     socket.emit('createChess', {text: _fen})
+    this.setState({pause: false});
     //socket.emit('findAllChess');
     //console.log(_fen);
   }
@@ -46,6 +49,7 @@ class Chess extends Component {
           console.log(items)
           this.setState({
             white: items,
+            pause: !items
           });
         });
 
@@ -71,6 +75,7 @@ class Chess extends Component {
       this.setState({
         from: items.text.from,
         to: items.text.to,
+        pause: true,
       });
     });
   }
@@ -93,16 +98,19 @@ class Chess extends Component {
       if(!this.state.done)
       {
         this.state.done = true;
-
       }
-      
     }
-
+    const time = new Date();
+    time.setSeconds(time.getSeconds() + 600);
+    
     return (
       <div class='inline'>
         <NavBar/>
         <div style={boardsContainer} >
           <WithMoveValidation parentCallback = {this.callbackFunction} opMovef = {this.state.from} opMovet  = {this.state.to} white = {this.state.white}/>
+        </div>
+        <div>
+          <MyTimer expiryTimestamp={time} pause = {this.state.pause} />
         </div>
         <div class="chat">
           <div class="user-box w-100">

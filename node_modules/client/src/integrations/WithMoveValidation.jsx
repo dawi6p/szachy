@@ -18,7 +18,8 @@ class HumanVsHuman extends Component {
     // currently clicked square
     square: "",
     // array of past game moves
-    history: []
+    history: [],
+    turn: true,
   };
 
   sendData = (fen) => {
@@ -27,6 +28,9 @@ class HumanVsHuman extends Component {
 
   componentDidMount() {
     this.game = new Chess();
+    this.setState({
+      turn: this.props.white,
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -46,7 +50,8 @@ class HumanVsHuman extends Component {
         this.setState({
           fen: this.game.fen(),
           history: this.game.history({ verbose: true }),
-          pieceSquare: ""
+          pieceSquare: "",
+          turn: true
         });
       }
     }
@@ -86,7 +91,7 @@ class HumanVsHuman extends Component {
     }));
   };
 
-  onDrop = ({ sourceSquare, targetSquare }) => {
+  /*onDrop = ({ sourceSquare, targetSquare }) => {
     // see if the move is legal
     let move = this.game.move({
       from: sourceSquare,
@@ -101,7 +106,7 @@ class HumanVsHuman extends Component {
       history: this.game.history({ verbose: true }),
       squareStyles: squareStyling({ pieceSquare, history })
     }));
-  };
+  };*/
 
   onMouseOverSquare = square => {
     // get list of possible moves for this square
@@ -134,9 +139,16 @@ class HumanVsHuman extends Component {
   };
 
   onSquareClick = square => {
+    if(!this.state.turn) 
+    {
+      console.log("nie moja tura")
+      console.log(this.state.turn)
+      return;
+    }
+
     this.setState(({ history }) => ({
       squareStyles: squareStyling({ pieceSquare: square, history }),
-      pieceSquare: square
+      pieceSquare: square,
     }));
 
     let move = this.game.move({
@@ -152,7 +164,8 @@ class HumanVsHuman extends Component {
     this.setState({
       fen: this.game.fen(),
       history: this.game.history({ verbose: true }),
-      pieceSquare: ""
+      pieceSquare: "",
+      turn: false
     });
   };
 
@@ -191,7 +204,7 @@ export default class WithMoveValidation extends Component {
   {
     return (
       <div>
-        <HumanVsHuman parentCallback = {this.callbackFunction} opMovef = {this.props.opMovef} opMovet  = {this.props.opMovet}>
+        <HumanVsHuman parentCallback = {this.callbackFunction} opMovef = {this.props.opMovef} opMovet  = {this.props.opMovet} white = {this.props.white}>
           {({
             position,
             onDrop,

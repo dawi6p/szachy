@@ -54,6 +54,7 @@ export class MessagesGateway {
     var temp = await this.messagesService.identify(id, name, client.id);
     console.log(this.room)
     client.join(this.room.roomIdTable[id].roomId);
+    client.emit("white", this.room.roomIdTable[id].white);
     return temp;
   }
 

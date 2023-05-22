@@ -19,6 +19,7 @@ class Chess extends Component {
       done: false,
       from:"",
       to: "",
+      white: Boolean,
 		};
 
     socket = io("http://localhost:3000");
@@ -41,6 +42,12 @@ class Chess extends Component {
       {
         var temp = decodeToken(String);
         socket.emit('join', {id: temp.id, name: temp.nickName});
+        socket.on('white', (items) =>{
+          console.log(items)
+          this.setState({
+            white: items,
+          });
+        });
 
         socket.emit('findAllMessages', {}, (items) =>{
         this.setState({ messages: items });
@@ -95,7 +102,7 @@ class Chess extends Component {
       <div class='inline'>
         <NavBar/>
         <div style={boardsContainer} >
-          <WithMoveValidation parentCallback = {this.callbackFunction} opMovef = {this.state.from} opMovet  = {this.state.to}/>
+          <WithMoveValidation parentCallback = {this.callbackFunction} opMovef = {this.state.from} opMovet  = {this.state.to} white = {this.state.white}/>
         </div>
         <div class="chat">
           <div class="user-box w-100">

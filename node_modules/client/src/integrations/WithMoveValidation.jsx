@@ -19,7 +19,7 @@ class HumanVsHuman extends Component {
     square: "",
     // array of past game moves
     history: [],
-    turn: true,
+    turn: Boolean,
   };
 
   sendData = (fen) => {
@@ -28,9 +28,8 @@ class HumanVsHuman extends Component {
 
   componentDidMount() {
     this.game = new Chess();
-    this.setState({
-      turn: this.props.white,
-    })
+    this.state.turn = this.props.white;
+    console.log(this.state.turn);
   }
 
   componentDidUpdate(prevProps) {
@@ -139,7 +138,7 @@ class HumanVsHuman extends Component {
   };
 
   onSquareClick = square => {
-    if(!this.state.turn) 
+    if(!this.state.turn || (this.props.white && this.game.fen() == 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')) 
     {
       console.log("nie moja tura")
       console.log(this.state.turn)
@@ -204,7 +203,7 @@ export default class WithMoveValidation extends Component {
   {
     return (
       <div>
-        <HumanVsHuman parentCallback = {this.callbackFunction} opMovef = {this.props.opMovef} opMovet  = {this.props.opMovet} white = {this.props.white}>
+        <HumanVsHuman parentCallback = {this.callbackFunction} opMovef = {this.props.opMovef} opMovet = {this.props.opMovet} white = {this.props.white}>
           {({
             position,
             onDrop,

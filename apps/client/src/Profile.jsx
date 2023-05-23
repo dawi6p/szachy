@@ -10,7 +10,9 @@ class Profile extends Component {
 
     this.state = {
 			token: String,
-			TokenisLoaded: false
+			TokenisLoaded: false,
+      match: [],
+      matchIsLoaded: false,
 		};
   }
 
@@ -23,6 +25,14 @@ class Profile extends Component {
         TokenisLoaded: true
       });
     })
+    fetch("/api/match/MatchResults")
+			.then((res) => res.json())
+			.then((json) => {
+				this.setState({
+					match: json,
+					matchIsLoaded: true
+				});
+			})
   }
 
   render() {
@@ -30,6 +40,8 @@ class Profile extends Component {
     
     if(!TokenisLoaded) return '';
     if(isExpired(token)) return (<Navigate to="/Home" />);
+
+    let temp = decodeToken(token);
 
     return (
       <div class='inline'>
@@ -42,7 +54,7 @@ class Profile extends Component {
             </div> 
             
             <div class="media-body mb-5 text-white"> 
-              <h4 class="mt-0 mb-0">Dawid Gach</h4> 
+              <h4 class="mt-0 mb-0">{temp.nickName}</h4> 
             </div> 
             <div class="d-flex justify-content-end text-center"> 
               <ul class="list-inline mb-0 mr-5 ml-5"> 

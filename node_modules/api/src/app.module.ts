@@ -17,6 +17,9 @@ import { User } from 'output/entities/User';
 import { RolesGuard } from './decorators/roles.guards';
 import { APP_GUARD } from '@nestjs/core';
 import { MessagesModule } from './messages/messages.module';
+import { MatchController } from './match/match.controller';
+import { MatchService } from './match/match.service';
+import { MatchModule } from './match/match.module';
 
 @Module({
   imports: [
@@ -38,7 +41,8 @@ import { MessagesModule } from './messages/messages.module';
     }),
     AuthModule,
     UsersModule,
-    MessagesModule
+    MessagesModule,
+    MatchModule
   ],
   controllers: [AppController],
   providers: [

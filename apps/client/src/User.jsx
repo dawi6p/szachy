@@ -30,14 +30,14 @@ class User extends React.Component {
 					TokenisLoaded: true
 				});
 			})
-		fetch("/api/users/User?id="+this.id)
-			.then((res) => res.json())
-			.then((json) => {
-				this.setState({
-					items: json,
-					DataisLoaded: true
-				});
-			})
+	fetch("/api/users/User?id="+this.id)
+		.then((res) => res.json())
+		.then((json) => {
+			this.setState({
+				items: json,
+				DataisLoaded: true
+			});
+		})
 	}
 	render() {
 		const { DataisLoaded, items, token, TokenisLoaded} = this.state;

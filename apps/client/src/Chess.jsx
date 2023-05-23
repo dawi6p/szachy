@@ -23,7 +23,6 @@ class Chess extends Component {
       white: Boolean,
       pause: Boolean
 		};
-
     socket = io("http://localhost:3000");
   }
 
@@ -33,6 +32,7 @@ class Chess extends Component {
     });*/
     socket.emit('createChess', {text: _fen})
     this.setState({pause: false});
+    timer1.stop();
     //socket.emit('findAllChess');
     //console.log(_fen);
   }
@@ -102,16 +102,21 @@ class Chess extends Component {
     }
     const time = new Date();
     time.setSeconds(time.getSeconds() + 600);
+
+    const time2 = new Date();
+    time2.setSeconds(time2.getSeconds() + 600);
     
     return (
       <div class='inline'>
         <NavBar/>
-        <div style={boardsContainer} >
-          <WithMoveValidation parentCallback = {this.callbackFunction} opMovef = {this.state.from} opMovet  = {this.state.to} white = {this.state.white}/>
-        </div>
-        <div>
-          <MyTimer expiryTimestamp={time} pause = {this.state.pause} />
-        </div>
+          <div style={boardsContainer} >
+          <div class='timer'>
+          </div>
+            <WithMoveValidation parentCallback = {this.callbackFunction} opMovef = {this.state.from} opMovet  = {this.state.to} white = {this.state.white}/>
+            <div class='timer'>
+            <MyTimer expiryTimestamp={time2} pause = {this.state.pause} />
+          </div>
+          </div>
         <div class="chat">
           <div class="user-box w-100">
             <form onSubmit={this.sendMessage}>

@@ -20,6 +20,9 @@ import { MessagesModule } from './messages/messages.module';
 import { MatchController } from './match/match.controller';
 import { MatchService } from './match/match.service';
 import { MatchModule } from './match/match.module';
+import { ScoreController } from './score/score.controller';
+import { ScoreService } from './score/score.service';
+import { ScoreModule } from './score/score.module';
 
 @Module({
   imports: [
@@ -42,7 +45,8 @@ import { MatchModule } from './match/match.module';
     AuthModule,
     UsersModule,
     MessagesModule,
-    MatchModule
+    MatchModule,
+    ScoreModule
   ],
   controllers: [AppController],
   providers: [

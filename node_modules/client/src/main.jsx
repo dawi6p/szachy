@@ -7,6 +7,7 @@ import Rejestracja from './rejestracja.jsx'
 import UsersList2 from './UsersList2.jsx'
 import User from './User.jsx'
 import Profile from './Profile.jsx'
+import MyHome from './MyHome.jsx';
 import './index.css'
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
       <Routes>
         <Route index element={<Home />} />
         <Route path="/Home" element={<Home />} />
+        <Route path="/MyHome" element={<MyHome />} />
         <Route path="/Chess" element={<Chess />} />
         <Route path="/rejestracja" element={<Rejestracja />} />
         <Route path="/profile" element={<Profile />} />

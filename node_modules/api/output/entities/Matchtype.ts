@@ -12,6 +12,6 @@ export class Matchtype {
   @Column("varchar", { name: "Name", length: 20 })
   name: string;
 
-  @OneToMany(() => Match, (match) => match.type)
+  @OneToMany(() => Match, (match) => match.matchtype)
   matches: Match[];
 }

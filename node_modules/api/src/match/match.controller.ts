@@ -21,4 +21,14 @@ export class MatchController
         const MatchResults =  this.matchService.MatchResults(temp['id']);
         return MatchResults;
     }
+
+    @Get('/Match')
+    async match(@Query() query, @Session() session: Record<string, any>){
+        const jwtService = new JwtService()
+
+        let temp = jwtService.decode(session.access_token)
+
+        const MatchResults =  this.matchService.Match(temp['id'], 5);
+        return MatchResults;
+    }
 }

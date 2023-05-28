@@ -17,12 +17,9 @@ import { User } from 'output/entities/User';
 import { RolesGuard } from './decorators/roles.guards';
 import { APP_GUARD } from '@nestjs/core';
 import { MessagesModule } from './messages/messages.module';
-import { MatchController } from './match/match.controller';
-import { MatchService } from './match/match.service';
 import { MatchModule } from './match/match.module';
-import { ScoreController } from './score/score.controller';
-import { ScoreService } from './score/score.service';
 import { ScoreModule } from './score/score.module';
+import { MatchtypeModule } from './matchtype/matchtype.module';
 
 @Module({
   imports: [
@@ -46,7 +43,8 @@ import { ScoreModule } from './score/score.module';
     UsersModule,
     MessagesModule,
     MatchModule,
-    ScoreModule
+    ScoreModule,
+    MatchtypeModule
   ],
   controllers: [AppController],
   providers: [

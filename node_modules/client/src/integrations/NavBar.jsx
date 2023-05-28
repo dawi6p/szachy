@@ -17,7 +17,7 @@ class NavBar extends Component {
                             <button class='submitButton' onClick={() => { window.location.href = 'Chess'; }}><i class="fas fa-chess-king icon"></i>Play</button>
                         </div>
                     </li>
-                    <li><button class='navButton' onClick={() => { window.location.href = 'Home'; }}><i class="fas fa-home icon"></i> Home</button></li>
+                    <li><button class='navButton' onClick={() => { window.location.href = 'MyHome'; }}><i class="fas fa-home icon"></i> Home</button></li>
                     <li><button class='navButton' onClick={() => { window.location.href = 'Profile'; }}><i class="fas fa-user-alt icon"></i> Profile</button></li>
                     <li><button class='navButton' onClick={() => { window.location.href = '/api/auth/logOut'; }}><i class="fas fa-user-alt icon"></i> Log out</button></li>
                 </ul>

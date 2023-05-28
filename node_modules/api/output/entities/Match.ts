@@ -49,10 +49,10 @@ export class Match {
   @JoinColumn([{ name: "White", referencedColumnName: "id" }])
   white2: User;
 
-  @ManyToOne(() => Matchtype, (matchtype) => matchtype.matches, {
+  @ManyToOne(() => Matchtype, matchtype => matchtype.matches, {
     onDelete: "SET NULL",
     onUpdate: "CASCADE",
   })
   @JoinColumn([{ name: "TypeID", referencedColumnName: "id" }])
-  type: Matchtype;
+  matchtype: Matchtype;
 }

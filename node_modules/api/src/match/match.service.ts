@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Match } from 'output/entities/Match';
+import { User } from 'output/entities/User';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -48,5 +49,21 @@ export class MatchService
         }
         
         return WDL;
+      }
+
+      async Match(ID: number, limit :number) {
+        const match = await this.matchRepository
+            .createQueryBuilder("match")
+            .innerJoinAndSelect('match.matchtype', 'machtype')
+            .innerJoinAndSelect('match.black2', 'black2')
+            .innerJoinAndSelect('match.white2', 'white2')
+            .where("match.white = :id", { id: ID })
+            .orWhere("match.black = :id", { id: ID })
+            .orderBy('match.date', 'DESC')
+            .limit(limit)
+            .getMany()
+
+        console.log(match)
+        return match
       }
 }

@@ -15,7 +15,9 @@ class Profile extends Component {
       match: [],
       matchIsLoaded: false,
       score: [],
-      scoreIsLoaded: false
+      scoreIsLoaded: false,
+      matches: [],
+      matchesIsLoaded: false,
 		};
   }
 
@@ -44,6 +46,14 @@ class Profile extends Component {
 					scoreIsLoaded: true
 				});
 			})
+    fetch("/api/match/Match")
+			.then((res) => res.json())
+			.then((json) => {
+				this.setState({
+					matches: json,
+					matchesIsLoaded: true
+				});
+			})
   }
 
   max(arr)
@@ -57,7 +67,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { TokenisLoaded, token, match, matchIsLoaded, score, scoreIsLoaded} = this.state;
+    const { TokenisLoaded, token, match, matchIsLoaded, score, scoreIsLoaded, matches, matchesIsLoaded} = this.state;
 
     let w = 0;
     let d = 0;
@@ -65,6 +75,17 @@ class Profile extends Component {
     const scoreY = [];
     const scoreX = [];
     let max = 0;
+
+    var win = {
+      1: "White Win",
+      2: "White Win",
+      3: "White Win",
+      4: "Draw",
+      5: "Draw",
+      6: "Black Win",
+      7: "Black Win",
+      8: "Black Win"
+    }
 
     if(!TokenisLoaded) return '';
     if(isExpired(token)) return (<Navigate to="/Home" />);
@@ -79,6 +100,7 @@ class Profile extends Component {
       l += match[7]
       l += match[8]
     }
+    console.log(matches)
 
     if(scoreIsLoaded)
     {
@@ -100,7 +122,7 @@ class Profile extends Component {
       type: 'scatter',
     }]
 
-
+    //console.log(matches[0].matchtype.time)
     var data = [
       {
         values: [match[1], match[2], match[3], match[4], match[5], match[6], match[7], match[8]],
@@ -112,7 +134,6 @@ class Profile extends Component {
       },
     ];
     
-
     return (
       <div class='inline'>
         <NavBar/>
@@ -152,8 +173,28 @@ class Profile extends Component {
                   layout={ {width: 500, height: 400} } />
                 <Plot
                   data={data1}
-                  layout={ {width: 500, height: 400, title: 'Area Chart', yaxis: {range: [90,max] }}} />
+                  layout={ {width: 500, height: 400, title: 'Your Rating', yaxis: {range: [90,max] }}} />
               </div>
+              <table class='container'>
+                <tr class="text-white">
+                    <th>Black</th>
+                    <th>White</th>
+                    <th></th>
+                    <th>Fen</th>
+                    <th>Type</th>
+                </tr>
+              {
+                matches.map((item) => (
+                  <tr class="text-white">
+                      <td class="text-white"> { item.black2.nickName } </td>
+                      <td> { item.white2.nickName }</td>
+                      <td> { win[item.win] } </td>
+                      <td> { item.fenString } </td>
+                      <td> { item.matchtype.name + " " + item.matchtype.time + "min"} </td>
+                  </tr>
+                ))
+			        }
+            </table>
             </div> 
           </div>
         </div> 

@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpException, HttpStatus, Post, Req, Res, Session } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Post, Req, Res, Session } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as session from 'express-session';
 import { UsersService } from '../users/users.service';
@@ -19,5 +19,12 @@ export class AuthController {
         else res.redirect('/Home');
         
         return user;
+    }
+
+    @Get('logOut')
+    async logOut(@Res() res, @Session() session: Record<string, any>){
+
+        session.access_token = "";
+        res.redirect('/Home');
     }
 }

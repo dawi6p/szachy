@@ -19,7 +19,7 @@ class NavBar extends Component {
                     </li>
                     <li><button class='navButton' onClick={() => { window.location.href = 'Home'; }}><i class="fas fa-home icon"></i> Home</button></li>
                     <li><button class='navButton' onClick={() => { window.location.href = 'Profile'; }}><i class="fas fa-user-alt icon"></i> Profile</button></li>
-                    <li><button class='navButton' onClick={() => { window.location.href = ''; }}><i class="fas fa-user-alt icon"></i> Log out</button></li>
+                    <li><button class='navButton' onClick={() => { window.location.href = '/api/auth/logOut'; }}><i class="fas fa-user-alt icon"></i> Log out</button></li>
                 </ul>
             </div>
         </div>

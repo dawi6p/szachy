@@ -323,8 +323,9 @@ body {
 
 .navButton
 {
+  border: 0;
   background-color: transparent;
-  width: 130px;
+  min-width: 130px;
   text-align: left;
 }
 

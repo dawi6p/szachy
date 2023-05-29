@@ -1,10 +1,11 @@
-import { Body, Controller, Post, Get, Res, HttpException, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Get, Res, HttpException, Query, Req, UseGuards, Session } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from 'output/entities/User';
 import * as argon2 from "argon2";
 import { Roles } from '../decorators/roles.decorator';
 import { UserRole } from '../users/users.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { JwtService } from '@nestjs/jwt';
 var moment = require('moment');
 
 @Controller('users')
@@ -71,5 +72,71 @@ export class UsersController {
     async getUser(@Query() query: { id: number }){
         let users = await this.usersService.findOneId(query.id);
         return users;
+    }
+
+
+    @Post('changeEmail')
+    async emailEdit(@Res() res, @Body() params: Record<string, any>, @Session() session: Record<string, any>){
+
+        const jwtService = new JwtService()
+
+        let temp = jwtService.decode(session.access_token)
+
+        let users = await this.usersService.findOneId(temp['id']);
+
+        if(!users){
+            throw new HttpException("Nie znaleziono takiego użytkownika!", 404);
+        }
+
+        users.email = params.email;
+
+        this.usersService.updateEmail(users);
+
+        res.redirect('back');
+    }
+
+    @Post('changeNickName')
+    async nickNameEdit(@Res() res, @Body() params: Record<string, any>, @Session() session: Record<string, any>){
+
+        const jwtService = new JwtService()
+
+        let temp = jwtService.decode(session.access_token)
+
+        let users = await this.usersService.findOneId(temp['id']);
+
+        console.log(users)
+
+        if(!users){
+            throw new HttpException("Nie znaleziono takiego użytkownika!", 404);
+        }
+
+        users.nickName = params.NickName;
+        console.log(params.NickName)
+
+        console.log(users)
+
+        this.usersService.updateNickName(users);
+
+        res.redirect('back');
+    }
+
+    @Post('changePassword')
+    async passwordEdit(@Res() res, @Body() params: Record<string, any>, @Session() session: Record<string, any>){
+
+        const jwtService = new JwtService()
+
+        let temp = jwtService.decode(session.access_token)
+
+        let users = await this.usersService.findOneId(temp['id']);
+
+        if(!users){
+            throw new HttpException("Nie znaleziono takiego użytkownika!", 404);
+        }
+
+        users.password = await argon2.hash(params.password);
+
+        this.usersService.updatePassword(users);
+
+        res.redirect('back');
     }
 }

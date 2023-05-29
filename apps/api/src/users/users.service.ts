@@ -45,6 +45,18 @@ export class UsersService {
     await this.userRepository.update({id:User.id}, {deleted:User.deleted});
   }
 
+  async updateEmail(User: User): Promise<void>{
+    await this.userRepository.update({id:User.id}, {email:User.email});
+  }
+
+  async updateNickName(User: User): Promise<void>{
+    await this.userRepository.update({id:User.id}, {nickName:User.nickName});
+  }
+
+  async updatePassword(User: User): Promise<void>{
+    await this.userRepository.update({id:User.id}, {password:User.password});
+  }
+
   async ban(User: User): Promise<void>{
     await this.userRepository.update({id:User.id}, {bannedUntil:User.bannedUntil});
   }

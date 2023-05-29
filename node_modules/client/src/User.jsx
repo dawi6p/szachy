@@ -48,8 +48,6 @@ class User extends React.Component {
 			return (<Navigate to="/Home" />);
 		}
 
-    console.log(this.id)
-
 		if (!DataisLoaded) return <div><h1> Tańcz.... </h1> </div> ;
 
 		return (

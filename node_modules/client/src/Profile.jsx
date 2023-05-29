@@ -141,7 +141,7 @@ class Profile extends Component {
           <div class="media align-items-end profile-head"> 
             <div class="profile mr-5 ml-5">
               <img src="/vite.svg" alt="profilePic" height='75' width='75' class='imgProfile'></img>
-              <a href="#" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a>
+              <a href="/Profile/Edit" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a>
             </div> 
             
             <div class="media-body mb-5 text-white"> 

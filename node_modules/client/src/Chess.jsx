@@ -3,7 +3,6 @@ import { isExpired, decodeToken } from "react-jwt";
 import io from "socket.io-client";
 import { Navigate } from 'react-router-dom';
 import NavBar from "./integrations/NavBar";
-import MyTimer from "./integrations/MyTimer";
 
 import WithMoveValidation from "./integrations/WithMoveValidation";
 var socket;
@@ -21,20 +20,15 @@ class Chess extends Component {
       from:"",
       to: "",
       white: Boolean,
-      pause: Boolean
+      time1: 600,
+      time2: 600
 		};
     socket = io("http://localhost:3000");
   }
 
   callbackFunction = async (_fen) => {
-    /*await this.setState({
-      fen: _fen,
-    });*/
     socket.emit('createChess', {text: _fen})
-    this.setState({pause: false});
-    timer1.stop();
-    //socket.emit('findAllChess');
-    //console.log(_fen);
+    this.setState({white: !this.state.white});
   }
   
   componentDidMount() {
@@ -49,7 +43,6 @@ class Chess extends Component {
           console.log(items)
           this.setState({
             white: items,
-            pause: !items
           });
         });
 
@@ -75,9 +68,21 @@ class Chess extends Component {
       this.setState({
         from: items.text.from,
         to: items.text.to,
-        pause: true,
+        white: !this.state.white
       });
     });
+
+    this.timerInterval = setInterval(() => {
+      if(this.state.white){
+        this.setState({
+          time1: this.state.time1-0.1
+        })
+      }else{
+        this.setState({
+          time2: this.state.time2-0.1
+        })
+      }
+    }, 100);
   }
 
   sendMessage = e =>{
@@ -100,11 +105,6 @@ class Chess extends Component {
         this.state.done = true;
       }
     }
-    const time = new Date();
-    time.setSeconds(time.getSeconds() + 600);
-
-    const time2 = new Date();
-    time2.setSeconds(time2.getSeconds() + 600);
     
     return (
       <div class='inline'>
@@ -112,10 +112,21 @@ class Chess extends Component {
           <div style={boardsContainer} >
           <div class='timer'>
           </div>
+            <div class='timer'>
+              <div style={{textAlign: 'center'}}>
+                <div style={{fontSize: '30px', background: "white"}}>
+                  <span>{ Math.floor(this.state.time2/3600) }</span>:<span>{ Math.floor(this.state.time2/60)%60 }</span>:<span>{ Math.floor(this.state.time2)%60 }</span>
+                </div>
+              </div>
+            </div>
             <WithMoveValidation parentCallback = {this.callbackFunction} opMovef = {this.state.from} opMovet  = {this.state.to} white = {this.state.white}/>
             <div class='timer'>
-            <MyTimer expiryTimestamp={time2} pause = {this.state.pause} />
-          </div>
+              <div style={{textAlign: 'center'}}>
+                <div style={{fontSize: '30px', background: "white"}}>
+                  <span>{ Math.floor(this.state.time1/3600) }</span>:<span>{ Math.floor(this.state.time1/60)%60 }</span>:<span>{ Math.floor(this.state.time1)%60 }</span>
+                </div>
+              </div>
+            </div>
           </div>
         <div class="chat">
           <div class="user-box w-100">

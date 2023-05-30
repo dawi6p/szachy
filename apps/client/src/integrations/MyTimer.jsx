@@ -19,7 +19,7 @@ class MyTimer extends Component {
 
   componentDidMount() {
     const { expiryTimestamp } = this.props;
-    this.startTimer(expiryTimestamp);
+      this.startTimer(expiryTimestamp);
   }
 
 

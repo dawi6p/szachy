@@ -20,6 +20,7 @@ class HumanVsHuman extends Component {
     // array of past game moves
     history: [],
     turn: Boolean,
+    
   };
 
   sendData = (fen) => {
@@ -29,7 +30,6 @@ class HumanVsHuman extends Component {
   componentDidMount() {
     this.game = new Chess();
     this.state.turn = this.props.white;
-    console.log(this.state.turn);
   }
 
   componentDidUpdate(prevProps) {
@@ -219,6 +219,7 @@ export default class WithMoveValidation extends Component {
               id="humanVsHuman"
               width={620}
               position={position}
+              orientation= {this.props.color}
               //onDrop={onDrop}
               onMouseOverSquare={onMouseOverSquare}
               onMouseOutSquare={onMouseOutSquare}

@@ -20,6 +20,7 @@ class Chess extends Component {
       from:"",
       to: "",
       white: Boolean,
+      color: 'white',
       time1: 600,
       time2: 600
 		};
@@ -41,6 +42,12 @@ class Chess extends Component {
         socket.emit('join', {id: temp.id, name: temp.nickName});
         socket.on('white', (items) =>{
           console.log(items)
+          if(items)
+          {
+            this.setState({
+              color: 'black',
+            });
+          }
           this.setState({
             white: items,
           });
@@ -119,7 +126,7 @@ class Chess extends Component {
                 </div>
               </div>
             </div>
-            <WithMoveValidation parentCallback = {this.callbackFunction} opMovef = {this.state.from} opMovet  = {this.state.to} white = {this.state.white}/>
+            <WithMoveValidation parentCallback = {this.callbackFunction} opMovef = {this.state.from} opMovet  = {this.state.to} white = {this.state.white} color = {this.state.color}/>
             <div class='timer'>
               <div style={{textAlign: 'center'}}>
                 <div style={{fontSize: '30px', background: "white"}}>

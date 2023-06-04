@@ -37,7 +37,7 @@ class ChangeProfile extends React.Component {
         if(!TokenisLoaded) return '';
         if(isExpired(token)) 
         {
-            return (<Navigate to="/Home" />);
+            return (<Navigate to="/Login" />);
         }
 
         const temp = decodeToken(token)

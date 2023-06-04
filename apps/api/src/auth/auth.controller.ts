@@ -16,7 +16,7 @@ export class AuthController {
         session.access_token = user['access_token'];
 
         if(user['access_token'] != "Unauthorized") res.redirect('/Chess');
-        else res.redirect('/Home');
+        else res.redirect('/Login');
         
         return user;
     }
@@ -25,6 +25,6 @@ export class AuthController {
     async logOut(@Res() res, @Session() session: Record<string, any>){
 
         session.access_token = "";
-        res.redirect('/Home');
+        res.redirect('/MyHome');
     }
 }

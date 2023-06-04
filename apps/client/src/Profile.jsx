@@ -88,7 +88,7 @@ class Profile extends Component {
     }
 
     if(!TokenisLoaded) return '';
-    if(isExpired(token)) return (<Navigate to="/Home" />);
+    if(isExpired(token)) return (<Navigate to="/Login" />);
     if(matchIsLoaded)
     {
       w += match[1]

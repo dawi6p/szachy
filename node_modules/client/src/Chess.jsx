@@ -105,7 +105,7 @@ class Chess extends Component {
     const { TokenisLoaded, token } = this.state;
 
     if(!TokenisLoaded) return '';
-    if(isExpired(token)) return (<Navigate to="/Home" />);
+    if(isExpired(token)) return (<Navigate to="/Login" />);
     else{
       if(!this.state.done)
       {

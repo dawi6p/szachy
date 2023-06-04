@@ -45,7 +45,7 @@ class User extends React.Component {
 		if(!TokenisLoaded) return '';
     if(isExpired(token) || decodeToken(token).adminPower !== 1) 
 		{
-			return (<Navigate to="/Home" />);
+			return (<Navigate to="/Login" />);
 		}
 
 		if (!DataisLoaded) return <div><h1> Tańcz.... </h1> </div> ;

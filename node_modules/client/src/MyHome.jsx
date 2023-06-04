@@ -11,8 +11,6 @@ class MyHome extends Component {
 		super(props);
 
     this.state = {
-		token: String,
-		TokenisLoaded: false,
         matchType: [],
         matchTypeIsLoaded: false,
 	};
@@ -20,14 +18,6 @@ class MyHome extends Component {
   }
   
   componentDidMount() {
-    fetch("/api")
-    .then((res) => res.text())
-    .then((String) => {
-      this.setState({
-        token: String,
-        TokenisLoaded: true
-      });
-    })
     fetch("/api/matchtype/getAllMatchtype")
     .then((res) => res.json())
     .then((json) => {
@@ -39,10 +29,7 @@ class MyHome extends Component {
   }
 
   render() {
-    const { TokenisLoaded, token, matchType, matchTypeIsLoaded } = this.state;
-
-    if(!TokenisLoaded) return '';
-    if(isExpired(token)) return (<Navigate to="/Home" />);
+    const { matchType, matchTypeIsLoaded } = this.state;
 
     let matchTypeF = [
         { time: 0, name: "wczytywanie" },

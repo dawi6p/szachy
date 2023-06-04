@@ -4,6 +4,8 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { Server, Socket  } from 'socket.io';
 import { RoomService } from './room/room.service';
 import { CreateChessDto } from './dto/create-chess.dto';
+import { ScoreController } from 'src/score/score.controller';
+import { ScoreService } from 'src/score/score.service';
 
 @WebSocketGateway(
   {
@@ -49,12 +51,20 @@ export class MessagesGateway {
   @SubscribeMessage('join')
   async join(@MessageBody('name') name: string, @MessageBody('id') id: number, @ConnectedSocket() client: Socket)
   {
-    this.room.setRoomID(id);
+    var b = this.room.setRoomID(id);
+
 
     var temp = await this.messagesService.identify(id, name, client.id);
     console.log(this.room)
     client.join(this.room.roomIdTable[id].roomId);
     client.emit("white", this.room.roomIdTable[id].white);
+
+    if(b)
+    {
+      const message = this.messagesService.getLatestChess(this.room.roomIdTable[id].roomId, id);
+      client.emit('restoreChess',message);
+    }
+
     return temp;
   }
 
@@ -67,7 +77,6 @@ export class MessagesGateway {
 
     //this.serwer.in(this.room.roomIdTable[id].roomId).emit('chessMove',message);
     console.log(message);
-
     return message;
   }
 

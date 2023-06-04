@@ -17,6 +17,7 @@ class Chess extends Component {
       messages: [],
       messageText: String,
       done: false,
+      restore: false,
       from:"",
       to: "",
       white: Boolean,
@@ -79,6 +80,15 @@ class Chess extends Component {
       });
     });
 
+    socket.on("restoreChess", (items) =>{
+      console.log(items)
+      this.setState({
+        restore: true,
+        to: items.fen,
+        //white: items.turn
+      });
+    });
+
     this.timerInterval = setInterval(() => {
       if(this.state.white){
         this.setState({
@@ -112,6 +122,12 @@ class Chess extends Component {
         this.state.done = true;
       }
     }
+
+    if(this.state.restore)
+    {
+      //console.log(this.state.to)
+      //console.log(this.state.white)
+    }
     
     return (
       <div class='inline'>
@@ -126,7 +142,15 @@ class Chess extends Component {
                 </div>
               </div>
             </div>
-            <WithMoveValidation parentCallback = {this.callbackFunction} opMovef = {this.state.from} opMovet  = {this.state.to} white = {this.state.white} color = {this.state.color}/>
+
+            <WithMoveValidation 
+              parentCallback = {this.callbackFunction} 
+              opMovef = {this.state.from} 
+              opMovet  = {this.state.to} 
+              white = {this.state.white} 
+              restore = {this.state.restore}
+              color = {this.state.color} />
+
             <div class='timer'>
               <div style={{textAlign: 'center'}}>
                 <div style={{fontSize: '30px', background: "white"}}>

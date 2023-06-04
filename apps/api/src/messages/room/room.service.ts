@@ -12,7 +12,7 @@ export class RoomService {
 
     setRoomID(userId: number){
         let temp;
-        if(this.roomIdTable[userId] != null || this.roomIdTable[userId] != undefined) return;
+        if(this.roomIdTable[userId] != null || this.roomIdTable[userId] != undefined) return true;
         this.userNumber++;
         if(this.userNumber%2 == 1){
             temp = this.getRandomBoolean()
@@ -21,6 +21,8 @@ export class RoomService {
             temp = this.findIfWhite();
         }
         this.roomIdTable[userId] = {roomId: this.roomNumber, white: temp}
+
+        return false;
     }
 
     findIfWhite(): any {

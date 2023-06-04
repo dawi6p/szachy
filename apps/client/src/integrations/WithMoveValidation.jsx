@@ -7,6 +7,8 @@ import Chessboard from "chessboardjsx";
 class HumanVsHuman extends Component {
   static propTypes = { children: PropTypes.func };
 
+  restored = false;
+
   state = {
     fen: "start",
     // square styles for active drop square
@@ -33,6 +35,16 @@ class HumanVsHuman extends Component {
   }
 
   componentDidUpdate(prevProps) {
+
+    if(this.props.restore && !this.restored)
+    {
+      this.state.fen = this.props.opMovet;
+      this.game.load(this.props.opMovet);
+      console.log("chessjs Fen:" , this.game.fen())
+      console.log("memory Fen:" , this.state.fen)
+      this.restored = true;
+    }
+
     if (
       this.props.opMovef !== prevProps.opMovef ||
       this.props.opMovet !== prevProps.opMovet
@@ -201,9 +213,18 @@ export default class WithMoveValidation extends Component {
 
   render()
   {
+    //var position;
+    //if(this.props.restore) position = this.props.opMovet;
+
     return (
       <div>
-        <HumanVsHuman parentCallback = {this.callbackFunction} opMovef = {this.props.opMovef} opMovet = {this.props.opMovet} white = {this.props.white}>
+        <HumanVsHuman 
+          parentCallback = {this.callbackFunction} 
+          opMovef = {this.props.opMovef} 
+          opMovet = {this.props.opMovet} 
+          white = {this.props.white}
+          restore = {this.props.restore}>
+
           {({
             position,
             onDrop,
@@ -218,7 +239,7 @@ export default class WithMoveValidation extends Component {
             <Chessboard
               id="humanVsHuman"
               width={620}
-              position={position}
+              position= { position }
               orientation= {this.props.color}
               //onDrop={onDrop}
               onMouseOverSquare={onMouseOverSquare}
@@ -235,7 +256,6 @@ export default class WithMoveValidation extends Component {
             />
           )}
         </HumanVsHuman>
-        {this.props.opMove}
       </div>
     );
   }

@@ -6,8 +6,8 @@ import { CreateChessDto } from './dto/create-chess.dto';
 
 @Injectable()
 export class MessagesService {
-  messages: Message[] = [{id: -1, name: "nicosc", text: 'patrze sie na ciebie', idRoom: 1}];
-  chessMoves: Chess[] = [{id: -1, text: 'patrze sie na ciebie', idRoom: 1}];
+  messages: Message[] = [];
+  chessMoves: Chess[] = [];
   clientToUser = {};
 
   identify(id: number,name: string, clientId: string)
@@ -40,8 +40,6 @@ export class MessagesService {
   }
 
   createChess(createChessDto: CreateChessDto, clientId: string, idroom: number) {
-
-    console.log(createChessDto);
     const message = {
       id: this.clientToUser[clientId].id,
       text: createChessDto.text,
@@ -50,6 +48,26 @@ export class MessagesService {
 
     this.chessMoves.push(message);
     return message;
+  }
+
+  getLatestChess(idroom: number, userId: number)
+  {
+    var message;
+
+    message = this.chessMoves.filter((chessMove) => chessMove.idRoom == idroom);
+    message = message[message.length - 1];
+
+    var turn = (message.id == userId);
+
+    console.log(message.text.after)
+
+    const boardState = {
+      fen: message.text.after,
+      turn: turn,
+    }
+
+    console.log(boardState);
+    return boardState;
   }
 
   /*findAllChess(idroom: number) {

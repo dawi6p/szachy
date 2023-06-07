@@ -17,7 +17,7 @@ import { ScoreService } from 'src/score/score.service';
 )
 export class MessagesGateway {
   @WebSocketServer() serwer: Server;
-  constructor(private readonly messagesService: MessagesService, public room: RoomService) {  }
+  constructor(private readonly messagesService: MessagesService, private readonly scoreService: ScoreService, public room: RoomService) {  }
 
   @SubscribeMessage('createMessage')
   async create(@MessageBody() createMessageDto: CreateMessageDto, @ConnectedSocket() client: Socket) {
@@ -43,21 +43,20 @@ export class MessagesGateway {
     return messages;
   }
 
-  /*@SubscribeMessage('findOneMessage')
-  findOne(@MessageBody() id: number) {
-    return this.messagesService.findOne(id);
-  }*/
-
   @SubscribeMessage('join')
   async join(@MessageBody('name') name: string, @MessageBody('id') id: number, @ConnectedSocket() client: Socket)
   {
     var b = this.room.setRoomID(id);
 
-
     var temp = await this.messagesService.identify(id, name, client.id);
     console.log(this.room)
     client.join(this.room.roomIdTable[id].roomId);
     client.emit("white", this.room.roomIdTable[id].white);
+
+    //get score and send to oponent
+    /*var score = await this.scoreService.getLatestScore(id)['score'];
+    console.log(score)
+    client.broadcast.in(this.room.roomIdTable[id].roomId).emit('opScore',score);*/
 
     if(b)
     {
@@ -71,6 +70,12 @@ export class MessagesGateway {
     return temp;
   }
 
+  @SubscribeMessage('oponentId')
+  async oponentId( @MessageBody('id') id: number, @ConnectedSocket() client: Socket)
+  {
+    client.broadcast.in(this.room.roomIdTable[id].roomId).emit('opId',id);
+  }
+
   @SubscribeMessage('createChess')
   async createChess(@MessageBody() createChessDto: CreateChessDto, @ConnectedSocket() client: Socket) {
     const id = this.messagesService.clientToUser[client.id].id;
@@ -78,8 +83,7 @@ export class MessagesGateway {
     const message = await this.messagesService.createChess(createChessDto, client.id, this.room.roomIdTable[id].roomId);
     client.broadcast.in(this.room.roomIdTable[id].roomId).emit('chessMove',message);
 
-    //this.serwer.in(this.room.roomIdTable[id].roomId).emit('chessMove',message);
-    console.log(message);
+    //console.log(message);
     return message;
   }
 

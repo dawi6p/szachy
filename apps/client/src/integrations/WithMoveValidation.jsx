@@ -148,12 +148,9 @@ class HumanVsHuman extends Component {
   };
 
   onSquareClick = square => {
-    if(!this.state.turn || (this.props.white && this.game.fen() == 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')) 
-    {
-      console.log("nie moja tura")
-      console.log(this.state.turn)
-      return;
-    }
+
+    if(!this.props.match) return;
+    if(!this.state.turn || (this.props.white && this.game.fen() == 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')) return;
 
     this.setState(({ history }) => ({
       squareStyles: squareStyling({ pieceSquare: square, history }),
@@ -211,9 +208,6 @@ export default class WithMoveValidation extends Component {
 
   render()
   {
-    //var position;
-    //if(this.props.restore) position = this.props.opMovet;
-
     return (
       <div>
         <HumanVsHuman 
@@ -221,7 +215,8 @@ export default class WithMoveValidation extends Component {
           opMovef = {this.props.opMovef} 
           opMovet = {this.props.opMovet} 
           white = {this.props.white}
-          restore = {this.props.restore}>
+          restore = {this.props.restore}
+          match = {this.props.match}>
 
           {({
             position,

@@ -20,11 +20,13 @@ class Chess extends Component {
       restore: false,
       from:"",
       to: "",
-      cosinnego: false,
+      match: false,
       white: Boolean,
       color: 'white',
       time1: 600,
-      time2: 600
+      time2: 600,
+      score: 100,
+      opScore: 100,
 		};
     socket = io("http://localhost:3000");
   }
@@ -42,22 +44,24 @@ class Chess extends Component {
       {
         var temp = decodeToken(String);
         socket.emit('join', {id: temp.id, name: temp.nickName});
-        socket.on('white', (items) =>{
-          console.log(items)
+
+        socket.on('white', (items) =>
+        {
           if(items)
           {
             this.setState({
               color: 'black',
             });
           }
+
           this.setState({
             white: items,
           });
         });
 
         socket.emit('findAllMessages', {}, (items) =>{
-        this.setState({ messages: items });
-      });
+          this.setState({ messages: items });
+        });
       }
       
       this.setState({
@@ -65,6 +69,15 @@ class Chess extends Component {
         TokenisLoaded: true
       });
     })
+
+    fetch("/api/score/getLatestScore")
+			.then((res) => res.json())
+			.then((json) => {
+        console.log(json)
+				this.setState({
+					score: json['score'],
+				});
+			})
 
     socket.on("message", (items) =>{
       socket.emit('findAllMessages', {}, (items) =>{
@@ -86,19 +99,34 @@ class Chess extends Component {
       this.setState({
         restore: true,
         to: items.fen,
-        cosinnego: true
+        match: true
         //white: items.turn
       });
     });
 
     socket.on("otherPlayer", (i) =>{
       this.setState({
-        cosinnego: i,
+        match: i,
+      });
+      var temp = decodeToken(this.state.token)
+      socket.emit('oponentId', {id: temp.id})
+    });
+
+    socket.on("opId", (i) =>{
+      console.log(i);
+      this.setState({
+      });
+    });
+
+    socket.on("opScore", (i) =>{
+      console.log(i);
+      this.setState({
+        opScore: i,
       });
     });
 
     this.timerInterval = setInterval(() => {
-      if(!this.state.cosinnego) return;
+      if(!this.state.match) return;
 
       if(this.state.white){
         this.setState({
@@ -133,12 +161,6 @@ class Chess extends Component {
       }
     }
 
-    if(this.state.restore)
-    {
-      //console.log(this.state.to)
-      //console.log(this.state.white)
-    }
-
     return (
       <div class='inline'>
         <NavBar/>
@@ -150,10 +172,11 @@ class Chess extends Component {
                 <div style={{fontSize: '30px', background: "white"}}>
                   <span>{ Math.floor(this.state.time2/3600) }</span>:<span>{ Math.floor(this.state.time2/60)%60 }</span>:<span>{ Math.floor(this.state.time2)%60 }</span>
                 </div>
+                <p>{this.state.score}</p>
               </div>
             </div>
             {
-              !this.state.cosinnego &&
+              !this.state.match &&
               <h1 style={{color:'white'}}>awaiting oponent...</h1>
             }
             <WithMoveValidation 
@@ -162,12 +185,14 @@ class Chess extends Component {
               opMovet  = {this.state.to} 
               white = {this.state.white} 
               restore = {this.state.restore}
-              color = {this.state.color} />
+              color = {this.state.color} 
+              match = {this.state.match}/>
             <div class='timer'>
               <div style={{textAlign: 'center'}}>
                 <div style={{fontSize: '30px', background: "white"}}>
                   <span>{ Math.floor(this.state.time1/3600) }</span>:<span>{ Math.floor(this.state.time1/60)%60 }</span>:<span>{ Math.floor(this.state.time1)%60 }</span>
                 </div>
+                <p>{this.state.opScore}</p>
               </div>
             </div>
           </div>

@@ -35,7 +35,6 @@ export class MessagesService {
 
   findAll(idroom: number) {
     const Return = this.messages.filter(room => room.idRoom == idroom);
-    //console.log(Return);
     return Return;
   }
 

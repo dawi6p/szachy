@@ -40,8 +40,6 @@ class HumanVsHuman extends Component {
     {
       this.state.fen = this.props.opMovet;
       this.game.load(this.props.opMovet);
-      console.log("chessjs Fen:" , this.game.fen())
-      console.log("memory Fen:" , this.state.fen)
       this.restored = true;
     }
 

@@ -32,4 +32,10 @@ export class RoomService {
         );
         return !result["white"];
     }
+
+    isRoomFull()
+    {
+        if(this.userNumber%2 == 1) return false;
+        return true;
+    }
 }

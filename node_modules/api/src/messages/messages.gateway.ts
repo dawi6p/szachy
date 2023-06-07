@@ -64,6 +64,9 @@ export class MessagesGateway {
       const message = this.messagesService.getLatestChess(this.room.roomIdTable[id].roomId, id);
       client.emit('restoreChess',message);
     }
+    else{
+      if(this.room.isRoomFull()) this.serwer.in(this.room.roomIdTable[id].roomId).emit('otherPlayer',true);
+    }
 
     return temp;
   }

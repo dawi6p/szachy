@@ -20,6 +20,7 @@ class Chess extends Component {
       restore: false,
       from:"",
       to: "",
+      cosinnego: false,
       white: Boolean,
       color: 'white',
       time1: 600,
@@ -85,11 +86,20 @@ class Chess extends Component {
       this.setState({
         restore: true,
         to: items.fen,
+        cosinnego: true
         //white: items.turn
       });
     });
 
+    socket.on("otherPlayer", (i) =>{
+      this.setState({
+        cosinnego: i,
+      });
+    });
+
     this.timerInterval = setInterval(() => {
+      if(!this.state.cosinnego) return;
+
       if(this.state.white){
         this.setState({
           time1: this.state.time1-0.1
@@ -128,7 +138,7 @@ class Chess extends Component {
       //console.log(this.state.to)
       //console.log(this.state.white)
     }
-    
+
     return (
       <div class='inline'>
         <NavBar/>
@@ -142,7 +152,10 @@ class Chess extends Component {
                 </div>
               </div>
             </div>
-
+            {
+              !this.state.cosinnego &&
+              <h1 style={{color:'white'}}>awaiting oponent...</h1>
+            }
             <WithMoveValidation 
               parentCallback = {this.callbackFunction} 
               opMovef = {this.state.from} 
@@ -150,7 +163,6 @@ class Chess extends Component {
               white = {this.state.white} 
               restore = {this.state.restore}
               color = {this.state.color} />
-
             <div class='timer'>
               <div style={{textAlign: 'center'}}>
                 <div style={{fontSize: '30px', background: "white"}}>

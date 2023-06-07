@@ -24,6 +24,7 @@ export class AuthController {
     @Get('logOut')
     async logOut(@Res() res, @Session() session: Record<string, any>){
 
+        this.authService.logout(session.access_token);
         session.access_token = "";
         res.redirect('/MyHome');
     }

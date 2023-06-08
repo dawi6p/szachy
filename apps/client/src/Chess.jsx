@@ -86,7 +86,6 @@ class Chess extends Component {
     });
 
     socket.on("chessMove", (items) =>{
-      console.log(items)
       this.setState({
         from: items.text.from,
         to: items.text.to,
@@ -95,7 +94,6 @@ class Chess extends Component {
     });
 
     socket.on("restoreChess", (items) =>{
-      console.log(items)
       this.setState({
         restore: true,
         to: items.fen,
@@ -114,15 +112,13 @@ class Chess extends Component {
 
     socket.on("opId", (i) =>{
       console.log(i);
-      this.setState({
-      });
-    });
-
-    socket.on("opScore", (i) =>{
-      console.log(i);
-      this.setState({
-        opScore: i,
-      });
+      fetch("/api/score/getLatestScoreId?id="+i)
+			.then((res) => res.json())
+			.then((json) => {
+				this.setState({
+					opScore: json['score'],
+				});
+			})
     });
 
     this.timerInterval = setInterval(() => {

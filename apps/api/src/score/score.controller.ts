@@ -25,4 +25,11 @@ export class ScoreController {
         const Results =  this.scoreService.getLatestScore(temp['id']);
         return Results;
     }
+
+    @Get('/getLatestScoreId')
+    async latestScoreId(@Query() query: { id: number }){
+
+        const Results =  this.scoreService.getLatestScore(query.id);
+        return Results;
+    }
 }

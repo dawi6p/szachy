@@ -66,4 +66,9 @@ export class MatchService
         console.log(match)
         return match
       }
+
+      async createMatch(match: Match)
+      {
+        await this.matchRepository.save(match);
+      }
 }

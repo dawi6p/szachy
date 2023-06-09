@@ -6,11 +6,12 @@ import { Roles } from '../decorators/roles.decorator';
 import { UserRole } from '../users/users.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { ScoreService } from 'src/score/score.service';
 var moment = require('moment');
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService, private readonly scoreService: ScoreService) {}
 
     @Post('rejestracja')
     async addUpdateForm(@Res() res, @Body() params: Record<string, any>){
@@ -24,10 +25,14 @@ export class UsersController {
             users.registrationDate = moment().format('YYYY-MM-DD').toString();
             users.adminPowerId = 0;
 
-            this.usersService.save(users);
+            await this.usersService.save(users);
+
+            let user = await this.usersService.findOne(params.email);
+
+            this.scoreService.createScore(user.id, 100);
         }
 
-        res.redirect('/Home');
+        res.redirect('/MyHome');
     }
 
     @Get('/lista/usuwanie')

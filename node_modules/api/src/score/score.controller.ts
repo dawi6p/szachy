@@ -32,4 +32,18 @@ export class ScoreController {
         const Results =  this.scoreService.getLatestScore(query.id);
         return Results;
     }
+
+    @Get('/getLatestScoreName')
+    async latestScoreName(@Query() query: { id: number }){
+        const Results =  this.scoreService.getLatestScoreName(query.id);
+
+        console.log(await Results)
+        const odp = {
+            score: (await Results).score,
+            name: (await Results).user.nickName
+        }
+
+        console.log(odp)
+        return odp;
+    }
 }

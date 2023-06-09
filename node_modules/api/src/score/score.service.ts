@@ -30,7 +30,18 @@ export class ScoreService {
             .limit(1)
             .getOne()
 
-        console.log(score)
+        return score;
+    }
+
+    async getLatestScoreName(ID: number) {
+        const score = await this.scoreRepository
+            .createQueryBuilder("score")
+            .innerJoinAndSelect('score.user', 'user')
+            .where("score.userId = :id", { id: ID })
+            .orderBy('score.date', 'DESC')
+            .limit(1)
+            .getOne()
+
         return score;
     }
 

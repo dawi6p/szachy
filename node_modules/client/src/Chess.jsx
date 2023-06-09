@@ -26,7 +26,7 @@ class Chess extends Component {
       time1: 600,
       time2: 600,
       score: 100,
-      opScore: 100,
+      opScore: {score: 100, name: "awaiting oponent"},
 		};
     socket = io("http://localhost:3000");
   }
@@ -112,11 +112,11 @@ class Chess extends Component {
 
     socket.on("opId", (i) =>{
       console.log(i);
-      fetch("/api/score/getLatestScoreId?id="+i)
+      fetch("/api/score/getLatestScoreName?id="+i)
 			.then((res) => res.json())
 			.then((json) => {
 				this.setState({
-					opScore: json['score'],
+					opScore: json,
 				});
 			})
     });
@@ -157,24 +157,28 @@ class Chess extends Component {
       }
     }
 
+    var temp = decodeToken(token);
+
     return (
       <div class='inline'>
         <NavBar/>
+          {
+            //!this.state.match &&
+            //<h2 style={{color:'white'}}>awaiting oponent...</h2>
+          }
           <div style={boardsContainer} >
-          <div class='timer'>
-          </div>
+            
             <div class='timer'>
               <div style={{textAlign: 'center'}}>
                 <div style={{fontSize: '30px', background: "white"}}>
                   <span>{ Math.floor(this.state.time2/3600) }</span>:<span>{ Math.floor(this.state.time2/60)%60 }</span>:<span>{ Math.floor(this.state.time2)%60 }</span>
                 </div>
-                <p>{this.state.score}</p>
+                <div>
+                  <p class="text-white">{this.state.score}</p>
+                  <p class="text-success" >{temp.nickName}</p>
+                </div>
               </div>
             </div>
-            {
-              !this.state.match &&
-              <h1 style={{color:'white'}}>awaiting oponent...</h1>
-            }
             <WithMoveValidation 
               parentCallback = {this.callbackFunction} 
               opMovef = {this.state.from} 
@@ -188,7 +192,10 @@ class Chess extends Component {
                 <div style={{fontSize: '30px', background: "white"}}>
                   <span>{ Math.floor(this.state.time1/3600) }</span>:<span>{ Math.floor(this.state.time1/60)%60 }</span>:<span>{ Math.floor(this.state.time1)%60 }</span>
                 </div>
-                <p>{this.state.opScore}</p>
+                <div>
+                  <p class="text-white">{this.state.opScore['score']}</p>
+                  <p class="text-danger" >{this.state.opScore['name']}</p>
+                </div>
               </div>
             </div>
           </div>

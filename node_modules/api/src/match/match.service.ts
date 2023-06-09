@@ -63,7 +63,6 @@ export class MatchService
             .limit(limit)
             .getMany()
 
-        console.log(match)
         return match
       }
 

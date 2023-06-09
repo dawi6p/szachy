@@ -102,6 +102,15 @@ class Chess extends Component {
       });
     });
 
+    socket.on('giveId', ()=>{
+      var temp = decodeToken(this.state.token)
+      console.log("hej")
+      this.setState({
+        match: true,
+      });
+      socket.emit('oponentId', {id: temp.id})
+    });
+
     socket.on("otherPlayer", (i) =>{
       this.setState({
         match: i,
@@ -117,6 +126,7 @@ class Chess extends Component {
 			.then((json) => {
 				this.setState({
 					opScore: json,
+          match: true
 				});
 			})
     });
@@ -143,6 +153,14 @@ class Chess extends Component {
 
   handleMessageTextChanged(event) {
     this.setState({ messageText: event.target.value });
+  }
+
+  proposeDraw = () =>{
+    console.log("draw Proposed")
+  }
+
+  surrender = () =>{
+    console.log("u gave up")
   }
 
   render() {
@@ -176,6 +194,9 @@ class Chess extends Component {
                 <div>
                   <p class="text-white">{this.state.score}</p>
                   <p class="text-success" >{temp.nickName}</p>
+                  {
+                    this.state.match && <button onClick={this.surrender}>Surrender</button>
+                  }
                 </div>
               </div>
             </div>
@@ -195,6 +216,9 @@ class Chess extends Component {
                 <div>
                   <p class="text-white">{this.state.opScore['score']}</p>
                   <p class="text-danger" >{this.state.opScore['name']}</p>
+                  {
+                    this.state.match && <button onClick={this.proposeDraw}>Propose Draw</button>
+                  }
                 </div>
               </div>
             </div>

@@ -77,11 +77,16 @@ export class MessagesGateway {
   }
 
   @SubscribeMessage('oponentId')
-  async oponentId( @MessageBody('id') id: number, @ConnectedSocket() client: Socket)
+  async oponentId(@MessageBody('id') id: number, @ConnectedSocket() client: Socket)
   {
     client.broadcast.in(this.room.roomIdTable[id].roomId).emit('opId',id);
   }
 
+  @SubscribeMessage('gameEnded')
+  async gameEnded(@MessageBody('id') id: number, @MessageBody('id') opId: number, @ConnectedSocket() client: Socket)
+  {
+    client.broadcast.in(this.room.roomIdTable[id].roomId).emit('gameEnd');
+  }
   
   /*@SubscribeMessage('findAllChess')
   async findAllChess(@ConnectedSocket() client: Socket) {

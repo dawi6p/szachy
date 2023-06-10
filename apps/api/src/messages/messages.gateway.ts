@@ -7,6 +7,8 @@ import { CreateChessDto } from './dto/create-chess.dto';
 import { ScoreController } from 'src/score/score.controller';
 import { ScoreService } from 'src/score/score.service';
 import { MatchService } from 'src/match/match.service';
+import { Match } from 'output/entities/Match';
+var moment = require('moment');
 
 @WebSocketGateway(
   {
@@ -83,8 +85,73 @@ export class MessagesGateway {
   }
 
   @SubscribeMessage('gameEnded')
-  async gameEnded(@MessageBody('id') id: number, @MessageBody('id') opId: number, @ConnectedSocket() client: Socket)
+  async gameEnded(
+    @MessageBody('id') id: number, 
+    @MessageBody('opId') opId: number, 
+    @MessageBody('fen') fen: string,
+    @MessageBody('win') win: number, 
+    @MessageBody('type') type: number, 
+    @MessageBody('score') score: number, 
+    @MessageBody('opScore') opScore: number, 
+    @ConnectedSocket() client: Socket)
   {
+    const match = new Match();
+
+    let white = this.room.roomIdTable[id].white; 
+    if(white)
+    {
+      match.black = id;
+      match.white = opId;
+    }
+    else
+    {
+      match.black = opId;
+      match.white = id;
+    }
+    match.fenString = fen;
+    match.typeId = type;
+    match.win = win;
+    match.date = moment().format('YYYY-MM-DD').toString();
+
+    this.matchService.createMatch(match)
+
+    let diff = score - opScore;
+    let calPoints, w, d, l;
+    if(diff < 10) 
+    {
+      calPoints={
+        1: 8,
+        2: 0,
+        3: 8,
+      }
+    }
+    else
+    {
+      let l = Math.floor(8 - diff*0.1);
+      if(l < 1) l = 1;
+      calPoints={
+        1: Math.floor(8 + diff*0.1), 
+        2: Math.floor(1 + diff*0.05),
+        3: l, 
+      }
+    }
+
+    if(win < 4)
+    {
+
+    }
+    else if(win < 6)
+    {
+
+    }
+    else
+    {
+
+    }
+
+    this.scoreService.createScore(id, 100)
+    this.scoreService.createScore(opId, 100)
+
     client.broadcast.in(this.room.roomIdTable[id].roomId).emit('gameEnd');
   }
   

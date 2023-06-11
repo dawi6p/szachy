@@ -97,7 +97,7 @@ export class MessagesGateway {
   {
     const match = new Match();
 
-    let white = this.room.roomIdTable[id].white; 
+    let white = !this.room.roomIdTable[id].white; 
     if(white)
     {
       match.black = id;
@@ -111,7 +111,7 @@ export class MessagesGateway {
     match.fenString = fen;
     match.typeId = type;
     match.win = win;
-    match.date = moment().format('YYYY-MM-DD').toString();
+    match.date = moment().format('YYYY-MM-DD HH:mm:ss').toString();
 
     this.matchService.createMatch(match)
 
@@ -121,6 +121,9 @@ export class MessagesGateway {
     this.scoreService.createScore(opId, t.opScore)
 
     client.broadcast.in(this.room.roomIdTable[id].roomId).emit('gameEnd');
+
+    this.room.remove(id)
+    this.room.remove(opId)
   }
 
   private determineScore(white:boolean, score:number, opScore:number, win:number)
@@ -229,6 +232,8 @@ export class MessagesGateway {
       }
     }
 
+    if(t.score < 100) t.score = 100;
+    if(t.opScore < 100) t.opScore = 100;
     return t;
   }
   

@@ -27,6 +27,7 @@ class Chess extends Component {
       time2: 600,
       score: 100,
       opScore: {score: 100, name: "awaiting oponent"},
+      opId: Number,
 		};
     socket = io("http://localhost:3000");
   }
@@ -121,6 +122,9 @@ class Chess extends Component {
 
     socket.on("opId", (i) =>{
       console.log(i);
+      this.setState({
+        opId: i,
+      })
       fetch("/api/score/getLatestScoreName?id="+i)
 			.then((res) => res.json())
 			.then((json) => {
@@ -161,6 +165,20 @@ class Chess extends Component {
 
   surrender = () =>{
     console.log("u gave up")
+    let win = 1;
+    if(this.state.color = 'black') win = 6;
+    let fen = this.state.to;
+    if(fen == "") fen = "start";
+    let temp = decodeToken(this.state.token)
+    socket.emit('gameEnded', {
+      id: temp.id,
+      opId: this.state.opId,
+      fen: fen,
+      win: win, 
+      type: 4, 
+      score: this.state.score, 
+      opScore: this.state.opScore.score, 
+    })
   }
 
   render() {

@@ -38,4 +38,9 @@ export class RoomService {
         if(this.userNumber%2 == 1) return false;
         return true;
     }
+
+    remove(id: number)
+    {
+        delete this.roomIdTable[id];
+    }
 }

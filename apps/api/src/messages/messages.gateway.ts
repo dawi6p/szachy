@@ -115,8 +115,22 @@ export class MessagesGateway {
 
     this.matchService.createMatch(match)
 
-    let diff = score - opScore;
-    let calPoints, w, d, l;
+    let t = this.determineScore(white, score, opScore, win)
+
+    this.scoreService.createScore(id, t.score)
+    this.scoreService.createScore(opId, t.opScore)
+
+    client.broadcast.in(this.room.roomIdTable[id].roomId).emit('gameEnd');
+  }
+
+  private determineScore(white:boolean, score:number, opScore:number, win:number)
+  {
+    let diff = Math.floor(Math.pow(score - opScore, 2));
+    let calPoints;
+    let t = {
+      score: score,
+      opScore : opScore,
+    }
     if(diff < 10) 
     {
       calPoints={
@@ -127,32 +141,95 @@ export class MessagesGateway {
     }
     else
     {
-      let l = Math.floor(8 - diff*0.1);
-      if(l < 1) l = 1;
+      let b = Math.floor(8 - diff*0.1);
+      if(b < 1) b = 1;
       calPoints={
         1: Math.floor(8 + diff*0.1), 
         2: Math.floor(1 + diff*0.05),
-        3: l, 
+        3: b, 
       }
     }
 
-    if(win < 4)
+    if(white)
     {
-
-    }
-    else if(win < 6)
-    {
-
+      if(opScore > score)
+      {
+        if(win < 4)
+        {
+          t.opScore += calPoints[1]
+          t.score -= calPoints[1]
+        }
+        else if(win < 6)
+        {
+          t.opScore += calPoints[2]
+          t.score -= calPoints[2]
+        }
+        else
+        {
+          t.opScore += calPoints[3]
+          t.score -= calPoints[3]
+        }
+      }
+      else
+      {
+        if(win < 4)
+        {
+          t.opScore += calPoints[3]
+          t.score -= calPoints[3]
+        }
+        else if(win < 6)
+        {
+          t.opScore += calPoints[2]
+          t.score -= calPoints[2]
+        }
+        else
+        {
+          t.opScore += calPoints[1]
+          t.score -= calPoints[1]
+        }
+      }
     }
     else
     {
-
+      if(opScore > score)
+      {
+        if(win < 4)
+        {
+          t.opScore -= calPoints[1]
+          t.score += calPoints[1]
+        }
+        else if(win < 6)
+        {
+          t.opScore -= calPoints[2]
+          t.score += calPoints[2]
+        }
+        else
+        {
+          t.opScore -= calPoints[3]
+          t.score += calPoints[3]
+        }
+      }
+      else
+      {
+        if(win < 4)
+        {
+          t.opScore -= calPoints[3]
+          t.score += calPoints[3]
+        }
+        else if(win < 6)
+        {
+          t.opScore -= calPoints[2]
+          t.score += calPoints[2]
+        }
+        else
+        {
+          t.opScore -= calPoints[1]
+          t.score += calPoints[1]
+        }
+      }
     }
 
-    this.scoreService.createScore(id, 100)
-    this.scoreService.createScore(opId, 100)
-
-    client.broadcast.in(this.room.roomIdTable[id].roomId).emit('gameEnd');
+    return t;
   }
   
   /*@SubscribeMessage('findAllChess')

@@ -26,7 +26,12 @@ class HumanVsHuman extends Component {
   };
 
   sendData = (fen) => {
-    this.props.parentCallback(fen);
+    var temp ={
+      fen: fen,
+      game: this.game,
+    }
+    
+    this.props.parentCallback(temp);
   }
 
   componentDidMount() {

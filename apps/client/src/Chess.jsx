@@ -32,9 +32,25 @@ class Chess extends Component {
     socket = io("http://localhost:3000");
   }
 
-  callbackFunction = async (_fen) => {
-    socket.emit('createChess', {text: _fen})
+  callbackFunction = async (temp) => {
+    this.game = temp.game;
+    socket.emit('createChess', {text: temp['fen']})
     this.setState({white: !this.state.white});
+
+    if(temp.game.isDraw() || temp.game.isStalemate() || temp.game.isInsufficientMaterial())
+    {
+      this.endGame(5)
+    }
+    if(temp.game.isThreefoldRepetition())
+    {
+      this.endGame(4)
+    }
+    if(temp.game.isCheckmate())
+    {
+      var win = 2;
+      if(this.state.color == 'black') win = 7;
+      this.endGame(win)
+    }
   }
   
   componentDidMount() {
@@ -74,7 +90,6 @@ class Chess extends Component {
     fetch("/api/score/getLatestScore")
 			.then((res) => res.json())
 			.then((json) => {
-        console.log(json)
 				this.setState({
 					score: json['score'],
 				});
@@ -105,7 +120,6 @@ class Chess extends Component {
 
     socket.on('giveId', ()=>{
       var temp = decodeToken(this.state.token)
-      console.log("hej")
       this.setState({
         match: true,
       });
@@ -121,7 +135,6 @@ class Chess extends Component {
     });
 
     socket.on("opId", (i) =>{
-      console.log(i);
       this.setState({
         opId: i,
       })
@@ -164,12 +177,17 @@ class Chess extends Component {
   }
 
   surrender = () =>{
-    console.log("u gave up")
     let win = 1;
     if(this.state.color = 'black') win = 6;
-    let fen = this.state.to;
-    if(fen == "") fen = "start";
+
+    this.endGame(win)
+  }
+
+  endGame(win){
+    let fen = this.game.fen();
+
     let temp = decodeToken(this.state.token)
+    
     socket.emit('gameEnded', {
       id: temp.id,
       opId: this.state.opId,

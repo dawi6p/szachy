@@ -49,7 +49,7 @@ export class ScoreService {
         let score = new Score;
 
         score.score = points;
-        score.date = moment().format('YYYY-MM-DD').toString();
+        score.date = moment().format('YYYY-MM-DD HH:mm:ss').toString();
         score.userId = ID;
 
         await this.scoreRepository.save(score);

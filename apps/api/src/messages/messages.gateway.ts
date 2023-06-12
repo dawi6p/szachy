@@ -8,7 +8,8 @@ import { ScoreController } from 'src/score/score.controller';
 import { ScoreService } from 'src/score/score.service';
 import { MatchService } from 'src/match/match.service';
 import { Match } from 'output/entities/Match';
-var moment = require('moment');
+const moment = require('moment');
+const Elo = require('elo-calculator');
 
 @WebSocketGateway(
   {
@@ -97,7 +98,7 @@ export class MessagesGateway {
   {
     const match = new Match();
 
-    let white = !this.room.roomIdTable[id].white; 
+    let white = this.room.roomIdTable[id].white; 
     if(white)
     {
       match.black = id;
@@ -128,109 +129,49 @@ export class MessagesGateway {
 
   private determineScore(white:boolean, score:number, opScore:number, win:number)
   {
-    let diff = Math.floor(Math.pow(score - opScore, 2));
-    let calPoints;
     let t = {
       score: score,
       opScore : opScore,
     }
-    if(diff < 10) 
-    {
-      calPoints={
-        1: 8,
-        2: 0,
-        3: 8,
-      }
-    }
-    else
-    {
-      let b = Math.floor(8 - diff*0.1);
-      if(b < 1) b = 1;
-      calPoints={
-        1: Math.floor(8 + diff*0.1), 
-        2: Math.floor(1 + diff*0.05),
-        3: b, 
-      }
-    }
+
+    var elo = new Elo({rating: 100, k: [40, 20, 10]})
+
+    var p1 = elo.createPlayer(score)
+    var p2 = elo.createPlayer(opScore)
 
     if(white)
     {
-      if(opScore > score)
+      if(win < 4)
       {
-        if(win < 4)
-        {
-          t.opScore += calPoints[1]
-          t.score -= calPoints[1]
-        }
-        else if(win < 6)
-        {
-          t.opScore += calPoints[2]
-          t.score -= calPoints[2]
-        }
-        else
-        {
-          t.opScore += calPoints[3]
-          t.score -= calPoints[3]
-        }
+        elo.updateRatings([[p1,p2,1]]);
+      }
+      else if(win < 6)
+      {
+        elo.updateRatings([[p1,p2,0.5]]);
       }
       else
       {
-        if(win < 4)
-        {
-          t.opScore += calPoints[3]
-          t.score -= calPoints[3]
-        }
-        else if(win < 6)
-        {
-          t.opScore += calPoints[2]
-          t.score -= calPoints[2]
-        }
-        else
-        {
-          t.opScore += calPoints[1]
-          t.score -= calPoints[1]
-        }
+        elo.updateRatings([[p1,p2,0]]);
       }
     }
     else
     {
-      if(opScore > score)
+      if(win < 4)
       {
-        if(win < 4)
-        {
-          t.opScore -= calPoints[1]
-          t.score += calPoints[1]
-        }
-        else if(win < 6)
-        {
-          t.opScore -= calPoints[2]
-          t.score += calPoints[2]
-        }
-        else
-        {
-          t.opScore -= calPoints[3]
-          t.score += calPoints[3]
-        }
+        elo.updateRatings([[p1,p2,0]]);
+      }
+      else if(win < 6)
+      {
+        elo.updateRatings([[p1,p2,0.5]]);
       }
       else
       {
-        if(win < 4)
-        {
-          t.opScore -= calPoints[3]
-          t.score += calPoints[3]
-        }
-        else if(win < 6)
-        {
-          t.opScore -= calPoints[2]
-          t.score += calPoints[2]
-        }
-        else
-        {
-          t.opScore -= calPoints[1]
-          t.score += calPoints[1]
-        }
+        elo.updateRatings([[p1,p2,1]]);
       }
     }
+
+    t.score = p1.rating;
+    t.opScore = p2.rating;
 
     if(t.score < 100) t.score = 100;
     if(t.opScore < 100) t.opScore = 100;

@@ -11,6 +11,10 @@ class Chess extends Component {
   constructor(props) {
 		super(props);
 
+    const queryParameters = new URLSearchParams(window.location.search)
+    this.type = queryParameters.get("type")
+    if(this.type == undefined || this.type == null || this.type < 1 || this.type == NaN) this.type = 4;
+
     this.state = {
 			token: String,
 			TokenisLoaded: false,
@@ -23,11 +27,13 @@ class Chess extends Component {
       match: false,
       white: Boolean,
       color: 'white',
+      templateTime: 600,
       time1: 600,
       time2: 600,
       score: 100,
       opScore: {score: 100, name: "awaiting oponent"},
       opId: Number,
+      drawProposed: false,
 		};
     socket = io("http://localhost:3000");
   }
@@ -60,7 +66,7 @@ class Chess extends Component {
       if(!isExpired(String))
       {
         var temp = decodeToken(String);
-        socket.emit('join', {id: temp.id, name: temp.nickName});
+        socket.emit('join', {id: temp.id, name: temp.nickName, type: this.type});
 
         socket.on('white', (items) =>
         {
@@ -94,14 +100,27 @@ class Chess extends Component {
 					score: json['score'],
 				});
 			})
+    
+    fetch("/api/matchtype/getMatchTypeId?id="+this.type)
+    .then((res) => res.json())
+			.then((json) => {
+        console.log(json['time'] * 60,)
+
+				this.setState({
+          time1: json['time'] * 60,
+          time2: json['time'] * 60,
+          templateTime: json['time'] * 60,
+				});
+			})
 
     socket.on("time", (times) =>{
       console.log(times);
-      console.log(600 - Math.floor(times.opTime/1000));
-      console.log(600 - Math.floor(times.time/1000));
+      let t = this.state.templateTime;
+      console.log(t - Math.floor(times.opTime/1000));
+      console.log(t - Math.floor(times.time/1000));
       this.setState({
-        time1: 600 - Math.floor(times.opTime/1000),
-        time2: 600 - Math.floor(times.time/1000),
+        time1: t - Math.floor(times.opTime/1000),
+        time2: t - Math.floor(times.time/1000),
       })
     })
 
@@ -127,6 +146,21 @@ class Chess extends Component {
         //white: items.turn
       });
     });
+
+    socket.on('restoreTime', (items) => {
+      this.type = items;
+      fetch("/api/matchtype/getMatchTypeId?id="+this.type)
+      .then((res) => res.json())
+        .then((json) => {
+          console.log(json['time'] * 60,)
+
+          this.setState({
+            time1: json['time'] * 60,
+            time2: json['time'] * 60,
+            templateTime: json['time'] * 60,
+          });
+        })
+    })
 
     socket.on('giveId', ()=>{
       var temp = decodeToken(this.state.token)
@@ -162,6 +196,12 @@ class Chess extends Component {
 			})
     });
 
+    socket.on('drawProposed', ()=>{
+      this.setState({
+        drawProposed: true,
+      })
+    })
+
     this.timerInterval = setInterval(() => {
       if(!this.state.match) return;
 
@@ -187,7 +227,17 @@ class Chess extends Component {
   }
 
   proposeDraw = () =>{
-    console.log("draw Proposed")
+    socket.emit('draw')
+  }
+
+  accept = () => {
+    this.endGame(5)
+  }
+
+  deny = () => {
+    this.state.proposeDraw = false
+
+    console.log(this.state.proposeDraw)
   }
 
   surrender = () =>{
@@ -216,7 +266,7 @@ class Chess extends Component {
   }
 
   render() {
-    const { TokenisLoaded, token } = this.state;
+    const { TokenisLoaded, token, drawProposed } = this.state;
 
     if(!TokenisLoaded) return '';
     if(isExpired(token)) return (<Navigate to="/Login" />);
@@ -270,6 +320,12 @@ class Chess extends Component {
                   <p class="text-danger" >{this.state.opScore['name']}</p>
                   {
                     this.state.match && <button onClick={this.proposeDraw}>Propose Draw</button>
+                  }
+                  {
+                    drawProposed && <button onClick={this.accept}>Accept Draw</button>
+                  }
+                  {
+                    drawProposed && <button onClick={this.deny}>Deny Draw</button>
                   }
                 </div>
               </div>

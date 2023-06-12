@@ -11,17 +11,20 @@ export class RoomService {
         return Math.random() < 0.5;
     }
 
-    setRoomID(userId: number){
+    setRoomID(userId: number, type: number){
         let temp;
         if(this.roomIdTable[userId] != null || this.roomIdTable[userId] != undefined) return true;
+        
         this.userNumber++;
+
         if(this.userNumber%2 == 1){
             temp = this.getRandomBoolean()
             this.roomNumber++;
         }else{
             temp = this.findIfWhite();
         }
-        this.roomIdTable[userId] = {roomId: this.roomNumber, white: temp, timer: new Timer({ label: 'test-timer', startTimestamp: Number(new Date().getTime()) })}
+
+        this.roomIdTable[userId] = {roomId: this.roomNumber, white: temp, type: type, timer: new Timer({ label: 'test-timer', startTimestamp: Number(new Date().getTime()) })}
         this.roomIdTable[userId].timer.start();
         this.roomIdTable[userId].timer.pause();
 

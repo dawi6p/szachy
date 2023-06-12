@@ -59,7 +59,7 @@ class MyHome extends Component {
         <div style={divFlex}>
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <div class="col">
-                    <button class="card" style={card}>
+                    <button class="card noHeight" style={card}>
                         <img src=".\src\assets\ches.png" class="card-img-top" alt="Obraz szahcow"></img>
                         <div class="card-body text-info">
                             <h5 class="card-title">{ matchTypeF[0].name }</h5>
@@ -68,7 +68,7 @@ class MyHome extends Component {
                     </button>
                 </div>
                 <div class="col">
-                    <button class="card" style={card}>
+                    <button class="card noHeight" style={card}>
                         <img src=".\src\assets\ches.png" class="card-img-top" alt="Obraz szahcow"></img>
                         <div class="card-body text-info">
                             <h5 class="card-title">{ matchTypeF[1].name }</h5>
@@ -77,7 +77,7 @@ class MyHome extends Component {
                     </button>
                 </div>
                 <div class="col">
-                    <button class="card" style={card}>
+                    <button class="card noHeight" style={card}>
                         <img src=".\src\assets\ches.png" class="card-img-top" alt="Obraz szahcow"></img>
                         <div class="card-body text-info">
                             <h5 class="card-title">{ matchTypeF[2].name }</h5>
@@ -86,7 +86,7 @@ class MyHome extends Component {
                     </button>
                 </div>
                 <div class="col">
-                    <button class="card" style={card}>
+                    <button class="card noHeight" style={card}>
                         <img src=".\src\assets\ches.png" class="card-img-top" alt="Obraz szahcow"></img>
                         <div class="card-body text-info">
                             <h5 class="card-title">{ matchTypeF[3].name }</h5>
@@ -95,7 +95,7 @@ class MyHome extends Component {
                     </button>
                 </div>
                 <div class="col">
-                    <button class="card" style={card}>
+                    <button class="card noHeight" style={card}>
                         <img src=".\src\assets\ches.png" class="card-img-top" alt="Obraz szahcow"></img>
                         <div class="card-body text-info">
                             <h5 class="card-title">{ matchTypeF[4].name }</h5>

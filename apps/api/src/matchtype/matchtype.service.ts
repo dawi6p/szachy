@@ -9,7 +9,19 @@ export class MatchtypeService {
         @InjectRepository(Matchtype)
         private MatchtypeRepository: Repository<Matchtype>,
       ) {}
+    
     async findAll(): Promise<Matchtype[]> {
         return this.MatchtypeRepository.find();     
+    }
+
+    async getById(id: number)
+    {
+        const resoult = await this.MatchtypeRepository
+        .createQueryBuilder("matchType")
+        .where("matchType.id = :id", { id: id })
+        .limit(1)
+        .getOne()
+
+        return resoult;
     }
 }

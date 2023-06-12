@@ -15,7 +15,7 @@ export class AuthController {
 
         session.access_token = user['access_token'];
 
-        if(user['access_token'] != "Unauthorized") res.redirect('/Chess');
+        if(user['access_token'] != "Unauthorized") res.redirect('/MyHome');
         else res.redirect('/Login');
         
         return user;

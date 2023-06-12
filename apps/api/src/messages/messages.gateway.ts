@@ -48,9 +48,9 @@ export class MessagesGateway {
   }
 
   @SubscribeMessage('join')
-  async join(@MessageBody('name') name: string, @MessageBody('id') id: number, @ConnectedSocket() client: Socket)
+  async join(@MessageBody('name') name: string, @MessageBody('id') id: number, @MessageBody('type') type: number, @ConnectedSocket() client: Socket)
   {
-    var b = this.room.setRoomID(id);
+    var b = this.room.setRoomID(id, type);
 
     var temp = await this.messagesService.identify(id, name, client.id);
     client.join(this.room.roomIdTable[id].roomId);
@@ -61,8 +61,10 @@ export class MessagesGateway {
       client.broadcast.in(this.room.roomIdTable[id].roomId).emit('giveId');
       const message = this.messagesService.getLatestChess(this.room.roomIdTable[id].roomId, id);
       client.emit('restoreChess',message);
+      client.emit('rstoreTime', this.room.roomIdTable[id].type)
       let temp = { opTime: 0, time: this.room.roomIdTable[id].timer.ms() }
       client.emit('time',temp);
+
       if(this.room.roomIdTable[id].white){
         this.room.roomIdTable[id].timer.resume();
       }else{
@@ -85,10 +87,12 @@ export class MessagesGateway {
     this.room.roomIdTable[id].timer.pause();
 
     let temp = { opTime: this.room.roomIdTable[opId].timer.ms(), time: this.room.roomIdTable[id].timer.ms() }
+    let odtemp = { opTime: this.room.roomIdTable[id].timer.ms(), time: this.room.roomIdTable[opId].timer.ms() }
 
     const message = await this.messagesService.createChess(createChessDto, client.id, this.room.roomIdTable[id].roomId);
     client.broadcast.in(this.room.roomIdTable[id].roomId).emit('chessMove',message);
-    this.serwer.in(this.room.roomIdTable[id].roomId).emit('time',temp);
+    client.emit('time',temp);
+    client.broadcast.in(this.room.roomIdTable[id].roomId).emit('time',odtemp);
 
     return message;
   }
@@ -196,6 +200,15 @@ export class MessagesGateway {
     if(t.opScore < 100) t.opScore = 100;
     return t;
   }
+
+  @SubscribeMessage('draw')
+  async draw(@ConnectedSocket() client: Socket)
+  {
+    const id = this.messagesService.clientToUser[client.id].id;
+
+    client.broadcast.in(this.room.roomIdTable[id].roomId).emit('drawProposed');
+  }
+
   
   /*@SubscribeMessage('findAllChess')
   async findAllChess(@ConnectedSocket() client: Socket) {

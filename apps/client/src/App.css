@@ -394,7 +394,6 @@ body {
   flex-wrap: wrap;
 }
 
-.overInfo
-{
-  
+.noHeight{
+  min-height: auto;
 }

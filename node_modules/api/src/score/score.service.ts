@@ -45,6 +45,28 @@ export class ScoreService {
         return score;
     }
 
+    async getHighestScore(ID: number) {
+        const score = await this.scoreRepository
+            .createQueryBuilder("score")
+            .where("score.userId = :id", { id: ID })
+            .orderBy('score.score', 'DESC')
+            .limit(1)
+            .getOne()
+
+        return score;
+    }
+
+    async getScoreCount(ID: number) {
+        const score = await this.scoreRepository
+            .createQueryBuilder("score")
+            .having("score.userId = :id", { id: ID })
+            .select("SUM(score.id)", "count")
+            .getOne
+
+            console.log(score)
+        return score;
+    }
+
     async createScore(ID: number, points: number): Promise<void>{
         let score = new Score;
 

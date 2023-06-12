@@ -139,7 +139,7 @@ export class MessagesGateway {
     var p1 = elo.createPlayer(score)
     var p2 = elo.createPlayer(opScore)
 
-    if(white)
+    if(!white)
     {
       if(win < 4)
       {

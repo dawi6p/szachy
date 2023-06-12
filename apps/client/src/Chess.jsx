@@ -126,6 +126,10 @@ class Chess extends Component {
       socket.emit('oponentId', {id: temp.id})
     });
 
+    socket.on('gameEnd', ()=>{
+      window.location.href = 'EndGame';
+    });
+
     socket.on("otherPlayer", (i) =>{
       this.setState({
         match: i,
@@ -183,12 +187,12 @@ class Chess extends Component {
     this.endGame(win)
   }
 
-  endGame(win){
+  async endGame(win){
     let fen = this.game.fen();
 
     let temp = decodeToken(this.state.token)
     
-    socket.emit('gameEnded', {
+    await socket.emit('gameEnded', {
       id: temp.id,
       opId: this.state.opId,
       fen: fen,
@@ -197,6 +201,8 @@ class Chess extends Component {
       score: this.state.score, 
       opScore: this.state.opScore.score, 
     })
+
+    window.location.href = 'EndGame';
   }
 
   render() {

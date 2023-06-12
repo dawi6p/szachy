@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
-import './App.css'
-import NavBar from './integrations/NavBar';
+import React from "react";
+import { isExpired, decodeToken } from "react-jwt";
+import { Navigate } from 'react-router-dom';
+import NavBar from "./integrations/NavBar";
 
 class EndGame extends React.Component {
 
@@ -8,7 +9,7 @@ class EndGame extends React.Component {
 		super(props);
         const queryParameters = new URLSearchParams(window.location.search)
         this.id = queryParameters.get("id")
-        
+
 		this.state = {
 			token: String,
 			TokenisLoaded: false
@@ -37,8 +38,23 @@ class EndGame extends React.Component {
 
 		return (
             <>
+            <div class='inline'>
               <NavBar/>
-        
+              <div class="login-box text-white">
+                <h2>Game Over</h2>
+                <br/>
+                <p>You Won/Lost/Drawn by</p>
+                <p>Your score changed</p>
+                <p>100 &rarr; 108</p>
+                <div class="submit">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <button class='submitButton' onClick={() => { window.location.href = 'Chess'; }}><i class="fas fa-chess-king icon"></i>Play Again</button>
+                </div>
+              </div>
+            </div>
             </>
           )
     }

@@ -61,7 +61,7 @@ export class ScoreService {
             .createQueryBuilder("score")
             .having("score.userId = :id", { id: ID })
             .select("SUM(score.id)", "count")
-            .getOne
+            .getOne()
 
             console.log(score)
         return score;

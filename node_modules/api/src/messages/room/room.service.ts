@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Timer, Time, TimerOptions } from 'timer-node';
 
 @Injectable()
 export class RoomService {
@@ -20,7 +21,9 @@ export class RoomService {
         }else{
             temp = this.findIfWhite();
         }
-        this.roomIdTable[userId] = {roomId: this.roomNumber, white: temp}
+        this.roomIdTable[userId] = {roomId: this.roomNumber, white: temp, timer: new Timer({ label: 'test-timer', startTimestamp: Number(new Date().getTime()) })}
+        this.roomIdTable[userId].timer.start();
+        this.roomIdTable[userId].timer.pause();
 
         return false;
     }
@@ -31,6 +34,15 @@ export class RoomService {
                 room.roomId === this.roomNumber
         );
         return !result["white"];
+    }
+
+    startClockIfWhite(){
+        const result = Object.values(this.roomIdTable).find(
+            (room: { roomId: number }) =>
+                room.roomId === this.roomNumber
+        );
+
+        result['timer'].resume();
     }
 
     isRoomFull()

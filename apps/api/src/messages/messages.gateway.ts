@@ -8,6 +8,7 @@ import { ScoreController } from 'src/score/score.controller';
 import { ScoreService } from 'src/score/score.service';
 import { MatchService } from 'src/match/match.service';
 import { Match } from 'output/entities/Match';
+import { Timer, Time, TimerOptions } from 'timer-node';
 const moment = require('moment');
 const Elo = require('elo-calculator');
 
@@ -61,6 +62,13 @@ export class MessagesGateway {
       client.broadcast.in(this.room.roomIdTable[id].roomId).emit('giveId');
       const message = this.messagesService.getLatestChess(this.room.roomIdTable[id].roomId, id);
       client.emit('restoreChess',message);
+      let temp = { opTime: this.room.roomIdTable[opId].timer.ms(), time: this.room.roomIdTable[id].timer.ms() }//tutaj naprawić
+      client.emit('time',temp);
+      if(this.room.roomIdTable[id].white){
+        this.room.roomIdTable[id].timer.resume();
+      }else{
+        this.room.startClockIfWhite();
+      }
     }
     else{
       if(this.room.isRoomFull()) this.serwer.in(this.room.roomIdTable[id].roomId).emit('otherPlayer',true);
@@ -70,11 +78,22 @@ export class MessagesGateway {
   }
 
   @SubscribeMessage('createChess')
-  async createChess(@MessageBody() createChessDto: CreateChessDto, @ConnectedSocket() client: Socket) {
+  async createChess(@MessageBody() createChessDto: CreateChessDto, @MessageBody('opId') opId: number, @ConnectedSocket() client: Socket) {
     const id = this.messagesService.clientToUser[client.id].id;
+
+    this.room.roomIdTable[opId].timer.resume();
+
+    console.log(this.room.roomIdTable[opId].timer.time());
+
+    this.room.roomIdTable[id].timer.pause();
+
+    console.log(this.room.roomIdTable[id].timer.time());
+
+    let temp = { opTime: this.room.roomIdTable[opId].timer.ms(), time: this.room.roomIdTable[id].timer.ms() }
 
     const message = await this.messagesService.createChess(createChessDto, client.id, this.room.roomIdTable[id].roomId);
     client.broadcast.in(this.room.roomIdTable[id].roomId).emit('chessMove',message);
+    client.emit('time',temp);
 
     return message;
   }

@@ -34,7 +34,7 @@ class Chess extends Component {
 
   callbackFunction = async (temp) => {
     this.game = temp.game;
-    socket.emit('createChess', {text: temp['fen']})
+    socket.emit('createChess', {text: temp['fen'], opId: this.state.opId})
     this.setState({white: !this.state.white});
 
     if(temp.game.isDraw() || temp.game.isStalemate() || temp.game.isInsufficientMaterial())
@@ -94,6 +94,16 @@ class Chess extends Component {
 					score: json['score'],
 				});
 			})
+
+    socket.on("time", (times) =>{
+      console.log(times);
+      console.log(600 - Math.floor(times.opTime/1000));
+      console.log(600 - Math.floor(times.time/1000));
+      this.setState({
+        time1: 600 - Math.floor(times.opTime/1000),
+        time2: 600 - Math.floor(times.time/1000),
+      })
+    })
 
     socket.on("message", (items) =>{
       socket.emit('findAllMessages', {}, (items) =>{

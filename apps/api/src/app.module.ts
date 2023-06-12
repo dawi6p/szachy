@@ -20,6 +20,8 @@ import { MessagesModule } from './messages/messages.module';
 import { MatchModule } from './match/match.module';
 import { ScoreModule } from './score/score.module';
 import { MatchtypeModule } from './matchtype/matchtype.module';
+import { message } from 'output/entities/message';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { MatchtypeModule } from './matchtype/matchtype.module';
       username: 'root',
       password: '',
       database: 'szachy',
-      entities: [Friends, Match, Matchtype, Riddle, Riddlemove, Riddleuser, Score, User],
+      entities: [Friends, Match, Matchtype, Riddle, Riddlemove, Riddleuser, Score, User, message],
       synchronize: true,
       extra: {
         trustServerCertificate: true,
@@ -44,7 +46,8 @@ import { MatchtypeModule } from './matchtype/matchtype.module';
     MessagesModule,
     MatchModule,
     ScoreModule,
-    MatchtypeModule
+    MatchtypeModule,
+    MessageModule
   ],
   controllers: [AppController],
   providers: [

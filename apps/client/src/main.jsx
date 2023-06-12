@@ -10,6 +10,7 @@ import Profile from './Profile.jsx'
 import MyHome from './MyHome.jsx';
 import ChangeProfile from "./ChangeProfile.jsx"
 import EndGame from './endGame.jsx';
+import EditMessage from './editMessage.jsx';
 import './index.css'
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="/admin">
             <Route path="/admin/listaUsers" element={<UsersList2 />} />
             <Route path="/admin/user" element={<User />} />
+            <Route path="/admin/editMessage" element={<EditMessage />} />
         </Route>
       </Routes>
     </BrowserRouter>

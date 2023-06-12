@@ -1,7 +1,5 @@
 import React, { Component} from "react";
-import { isExpired } from "react-jwt";
 import io from "socket.io-client";
-import { Navigate } from 'react-router-dom';
 import NavBar from "./integrations/NavBar";
 
 var socket;
@@ -13,6 +11,8 @@ class MyHome extends Component {
     this.state = {
         matchType: [],
         matchTypeIsLoaded: false,
+        message: [],
+        messageIsLoaded: false
 	};
     socket = io("http://localhost:3000");
   }
@@ -26,10 +26,19 @@ class MyHome extends Component {
             matchTypeIsLoaded: true,
         });
     })
+
+    fetch("/api/message/MyHomeMessage")
+    .then((res) => res.json())
+    .then((json) => {
+        this.setState({
+            message: json,
+            messageIsLoaded: true,
+        });
+    })
   }
 
   render() {
-    const { matchType, matchTypeIsLoaded } = this.state;
+    const { matchType, matchTypeIsLoaded, messageIsLoaded, message } = this.state;
 
     let matchTypeF = [
         { time: 0, name: "wczytywanie" },
@@ -37,6 +46,11 @@ class MyHome extends Component {
         { time: 0, name: "wczytywanie" }, 
         { time: 0, name: "wczytywanie" },
         { time: 0, name: "wczytywanie" }
+    ];
+
+    let messageF = [
+        { title: "wczytywanie", message: "wczytywanie" },
+        { title: "wczytywanie", message: "wczytywanie" }
     ];
 
     let i = 0;
@@ -48,8 +62,18 @@ class MyHome extends Component {
         for (const object of matchType) {
             matchTypeF[i].time = object.time;
             matchTypeF[i].name = object.name;
+            matchTypeF[i].id = object.id;
             i++;
           }
+    }
+
+    if(messageIsLoaded){
+        i=0;
+        for(const obj of message){
+            messageF[i].title = obj.title;
+            messageF[i].message = obj.message
+            i++
+        }
     }
     
     return (
@@ -59,7 +83,7 @@ class MyHome extends Component {
         <div style={divFlex}>
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <div class="col">
-                    <button class="card noHeight" style={card}>
+                    <button onClick={() => { window.location.href = 'Chess?type='+matchTypeF[0].id; }} class="card noHeight" style={card}>
                         <img src=".\src\assets\ches.png" class="card-img-top" alt="Obraz szahcow"></img>
                         <div class="card-body text-info">
                             <h5 class="card-title">{ matchTypeF[0].name }</h5>
@@ -68,7 +92,7 @@ class MyHome extends Component {
                     </button>
                 </div>
                 <div class="col">
-                    <button class="card noHeight" style={card}>
+                    <button onClick={() => { window.location.href = 'Chess?type='+matchTypeF[1].id; }} class="card noHeight" style={card}>
                         <img src=".\src\assets\ches.png" class="card-img-top" alt="Obraz szahcow"></img>
                         <div class="card-body text-info">
                             <h5 class="card-title">{ matchTypeF[1].name }</h5>
@@ -77,7 +101,7 @@ class MyHome extends Component {
                     </button>
                 </div>
                 <div class="col">
-                    <button class="card noHeight" style={card}>
+                    <button onClick={() => { window.location.href = 'Chess?type='+matchTypeF[2].id; }} class="card noHeight" style={card}>
                         <img src=".\src\assets\ches.png" class="card-img-top" alt="Obraz szahcow"></img>
                         <div class="card-body text-info">
                             <h5 class="card-title">{ matchTypeF[2].name }</h5>
@@ -86,7 +110,7 @@ class MyHome extends Component {
                     </button>
                 </div>
                 <div class="col">
-                    <button class="card noHeight" style={card}>
+                    <button onClick={() => { window.location.href = 'Chess?type='+matchTypeF[3].id; }} class="card noHeight" style={card}>
                         <img src=".\src\assets\ches.png" class="card-img-top" alt="Obraz szahcow"></img>
                         <div class="card-body text-info">
                             <h5 class="card-title">{ matchTypeF[3].name }</h5>
@@ -95,7 +119,7 @@ class MyHome extends Component {
                     </button>
                 </div>
                 <div class="col">
-                    <button class="card noHeight" style={card}>
+                    <button onClick={() => { window.location.href = 'Chess?type='+matchTypeF[4].id; }} class="card noHeight" style={card}>
                         <img src=".\src\assets\ches.png" class="card-img-top" alt="Obraz szahcow"></img>
                         <div class="card-body text-info">
                             <h5 class="card-title">{ matchTypeF[4].name }</h5>
@@ -105,8 +129,8 @@ class MyHome extends Component {
                 </div>
             </div>
             <div style={textArea}>
-                <p class="font-weight-bold" style={text}><h2>Tytuł</h2></p>
-                <p class="font-weight-normal" style={text}><h5>Wiadomość ram pam pam</h5></p>
+                <p class="font-weight-bold" style={text}><h2>{ messageF[1].title }</h2></p>
+                <p class="font-weight-normal" style={text}><h5>{ messageF[1].message }</h5></p>
             </div>
         </div>
       </div>

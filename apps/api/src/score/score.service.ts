@@ -59,11 +59,9 @@ export class ScoreService {
     async getScoreCount(ID: number) {
         const score = await this.scoreRepository
             .createQueryBuilder("score")
-            .having("score.userId = :id", { id: ID })
-            .select("SUM(score.id)", "count")
-            .getOne()
+            .where("score.userId = :id", { id: ID })
+            .getCount()
 
-            console.log(score)
         return score;
     }
 

@@ -116,7 +116,7 @@ export class MessagesGateway {
 
     this.matchService.createMatch(match)
 
-    let t = this.determineScore(white, score, opScore, win)
+    let t = await this.determineScore(white, id, opId, score, opScore, win)
 
     this.scoreService.createScore(id, t.score)
     this.scoreService.createScore(opId, t.opScore)
@@ -127,7 +127,7 @@ export class MessagesGateway {
     this.room.remove(opId)
   }
 
-  private determineScore(white:boolean, score:number, opScore:number, win:number)
+  private async determineScore(white:boolean, id:number, opId:number, score:number, opScore:number, win:number)
   {
     let t = {
       score: score,
@@ -135,11 +135,16 @@ export class MessagesGateway {
     }
 
     var elo = new Elo({rating: 100, k: [40, 20, 10]})
+    var hScore = await this.scoreService.getHighestScore(id)
+    var opHScore = await this.scoreService.getHighestScore(opId)
+    var scoreCount = await this.scoreService.getScoreCount(id)
+    var opScoreCount = await this.scoreService.getScoreCount(opId)
+    
 
-    var p1 = elo.createPlayer(score)
-    var p2 = elo.createPlayer(opScore)
+    var p1 = elo.createPlayer(score, scoreCount, hScore)
+    var p2 = elo.createPlayer(opScore, opScoreCount, opHScore)
 
-    if(!white)
+    if(white)
     {
       if(win < 4)
       {

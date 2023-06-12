@@ -44,4 +44,20 @@ export class ScoreController {
 
         return odp;
     }
+
+    @Get('/getPreviousScore')
+    async getPreviousScore(@Session() session: Record<string, any>){
+        const jwtService = new JwtService()
+
+        let temp = jwtService.decode(session.access_token)
+
+        const Results = this.scoreService.getPreviousScore(temp['id']);
+        const ResultsLatest = this.scoreService.getLatestScore(temp['id']);
+
+        const odp = {
+            score: (await Results).score,
+            scoreLatest: (await ResultsLatest).score
+        }
+        return odp;
+    }
 }

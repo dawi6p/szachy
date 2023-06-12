@@ -22,6 +22,18 @@ export class ScoreService {
         return score;
     }
 
+    async getPreviousScore(ID: number) {
+        const score = await this.scoreRepository
+            .createQueryBuilder("score")
+            .where("score.userId = :id", { id: ID })
+            .orderBy('score.date', 'DESC')
+            .limit(2)
+            .getMany()
+
+        const response = score[1];
+        return response;
+    }
+
     async getLatestScore(ID: number) {
         const score = await this.scoreRepository
             .createQueryBuilder("score")

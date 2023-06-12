@@ -12,7 +12,9 @@ class EndGame extends React.Component {
 
 		this.state = {
 			token: String,
-			TokenisLoaded: false
+			TokenisLoaded: false,
+      score: 0,
+      scoreLatest: 0
 		};
 	}
 
@@ -25,6 +27,15 @@ class EndGame extends React.Component {
 					TokenisLoaded: true
 				});
 			})
+
+      fetch("/api/score/getPreviousScore")
+      .then((res) => res.json())
+      .then((json) => {
+        this.setState({
+          score: json['score'],
+          scoreLatest: json['scoreLatest']
+        });
+      })
 	}
 	render() 
     {
@@ -45,7 +56,7 @@ class EndGame extends React.Component {
                 <br/>
                 <p>You Won/Lost/Drawn by</p>
                 <p>Your score changed</p>
-                <p>100 &rarr; 108</p>
+                <p>{this.state.score} &rarr; {this.state.scoreLatest}</p>
                 <div class="submit">
                     <span></span>
                     <span></span>

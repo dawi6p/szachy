@@ -53,7 +53,6 @@ export class MessagesGateway {
     var b = this.room.setRoomID(id);
 
     var temp = await this.messagesService.identify(id, name, client.id);
-    console.log(this.room)
     client.join(this.room.roomIdTable[id].roomId);
     client.emit("white", this.room.roomIdTable[id].white);
 
@@ -62,7 +61,7 @@ export class MessagesGateway {
       client.broadcast.in(this.room.roomIdTable[id].roomId).emit('giveId');
       const message = this.messagesService.getLatestChess(this.room.roomIdTable[id].roomId, id);
       client.emit('restoreChess',message);
-      let temp = { opTime: this.room.roomIdTable[opId].timer.ms(), time: this.room.roomIdTable[id].timer.ms() }//tutaj naprawić
+      let temp = { opTime: 0, time: this.room.roomIdTable[id].timer.ms() }
       client.emit('time',temp);
       if(this.room.roomIdTable[id].white){
         this.room.roomIdTable[id].timer.resume();
@@ -83,17 +82,13 @@ export class MessagesGateway {
 
     this.room.roomIdTable[opId].timer.resume();
 
-    console.log(this.room.roomIdTable[opId].timer.time());
-
     this.room.roomIdTable[id].timer.pause();
-
-    console.log(this.room.roomIdTable[id].timer.time());
 
     let temp = { opTime: this.room.roomIdTable[opId].timer.ms(), time: this.room.roomIdTable[id].timer.ms() }
 
     const message = await this.messagesService.createChess(createChessDto, client.id, this.room.roomIdTable[id].roomId);
     client.broadcast.in(this.room.roomIdTable[id].roomId).emit('chessMove',message);
-    client.emit('time',temp);
+    this.serwer.in(this.room.roomIdTable[id].roomId).emit('time',temp);
 
     return message;
   }

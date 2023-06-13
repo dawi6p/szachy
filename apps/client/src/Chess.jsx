@@ -270,7 +270,7 @@ class Chess extends Component {
       opId: this.state.opId,
       fen: fen,
       win: win, 
-      type: 4, 
+      type: this.type, 
       score: this.state.score, 
       opScore: this.state.opScore.score, 
     })
